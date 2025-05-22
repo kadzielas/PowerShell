@@ -1,58 +1,53 @@
-﻿[String]$script:commit = "";
-[String]$script:pathToRepo = "C:\Users\Administrator\Desktop\GITHUB_PowerShell\";
-[String]$script:spaceText = "-----------------------------------------------------------------------------------"
+﻿#------------------------------------------------------------------------------------------
+#Description: Function to automate pushing commits into my PowerShell repository on GitHub.
+#------------------------------------------------------------------------------------------
+
+
+
+[string]$script:commit = ""
+[string]$script:pathToRepo = "C:\Users\Administrator\Desktop\GITHUB_PowerShell\"
+[string]$script:spaceText = "-----------------------------------------------------------------------------------"
+
+
 
 function commitUpdateToRepo {
-
-[CmdLetBinding()]
-
-param ()
+    [CmdletBinding()]
+    param ()
 
     begin {
-    Write-Verbose "Starting script..."
+        Write-Verbose "Starting script..."
 
-    cd $script:pathToRepo
+        Set-Location -Path $script:pathToRepo
 
-    Write-Host "GIT status below:"
-    Write-Host $script:spaceText
+        Write-Host "GIT status below:"
+        Write-Host $script:spaceText
+        git status
+        Write-Host $script:spaceText
 
-    git status
-
-    Write-Host $script:spaceText
-    
-
-    $script:commit = Read-Host "Provide description of commit that you want to push into repository"
-
+        $script:commit = Read-Host "Provide description of commit that you want to push into repository"
     }
-
 
     process {
-    try {
-    Write-Verbose "Received mandatory information, processing..."
+        try {
+            Write-Verbose "Received mandatory information, processing..."
 
-    git add .
-    git commit -m "$script:commit"
-    git push
+            git add .;
+            git commit -m "$script:commit";
+            git push;
 
-    if ($script:LASTEXITCODE -ne 0) {
-        throw "Git push failed with exit code $script:LASTEXITCODE"
-    }
-
-    } catch {
-    Write-Host "An error occured: $_"
         }
-
-    finally {
-    Write-Verbose "Processing finished..."
+        catch {
+            Write-Host "An error occurred: $_"
+        }
+        finally {
+            Write-Verbose "Processing finished..."
         }
     }
-
 
     end {
-    Write-Verbose "Script has successfully finished!"
-
-
+        Write-Verbose "Script has successfully finished!"
     }
 }
+
 
 commitUpdateToRepo -Verbose
