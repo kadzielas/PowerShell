@@ -31,6 +31,7 @@ function commitUpdateToRepo {
         try {
             Write-Verbose "Received mandatory information, processing..."
 
+            git branch main;
             git add .;
             git commit -m "$script:commit";
             git push;
