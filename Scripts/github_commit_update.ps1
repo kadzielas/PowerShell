@@ -34,6 +34,9 @@ param ()
     git commit -m "$script:commit"
     git push
 
+    if ($script:LASTEXITCODE -ne 0) {
+        throw "Git push failed with exit code $script:LASTEXITCODE"
+    }
 
     } catch {
     Write-Host "An error occured: $_"
