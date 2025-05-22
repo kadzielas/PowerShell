@@ -32,7 +32,7 @@ param ()
 
     git add .
     git commit -m "$script:commit"
-    git push origin main
+    git push
 
 
     } catch {
@@ -52,4 +52,4 @@ param ()
     }
 }
 
-commitUpdateToRepo
+commitUpdateToRepo -Verbose
