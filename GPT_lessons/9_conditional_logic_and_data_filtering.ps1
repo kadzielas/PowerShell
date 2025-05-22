@@ -1,55 +1,45 @@
-﻿[int]$script:number = 0;
-[string]$script:topic = "";
-[string]$script:fileName = "";
-[string]$script:filePath = "C:\Users\Administrator\Desktop\GITHUB_PowerShell\GPT_lessons\"
-
-$script:number = Read-Host "Provide number of current lesson"
-$script:topic = Read-Host "Provide topic of current lesson"
-$script:fileName = "$number`_$topic.ps1"
-
-$script:content = @"
-
+﻿
      
-     #$script:topic
+     #conditional_logic_and_data_filtering
 
 #!------------------------------------------------------------!
 #!                            Easy                            !
 #!------------------------------------------------------------!
 
-#Excercise $script:number.1
+#Excercise 9.1
 
-#Description: 
-
-
-
-
-#!------------------------------------------------------------!
-#Excercise $script:number.2
-
-#Description: 
+#Description: Use a switch statement to match a variable $color with possible values: "red", "blue", "green" and display a different message for each.
 
 
 
 
 #!------------------------------------------------------------!
-#Excercise $script:number.3
+#Excercise 9.2
 
-#Description: 
+#Description: Ask the user to input a day of the week and use switch to print whether it’s a weekday or weekend.
+
+
+
+
+#!------------------------------------------------------------!
+#Excercise 9.3
+
+#Description: Use switch to check a number from 1 to 5 and print the number spelled out (e.g. 1 → One, 2 → Two).
 
 
 
 
 #!------------------------------------------------------------!
-#Excercise $script:number.4
+#Excercise 9.4
 
-#Description: 
+#Description: Create a switch block that handles both "start" and "stop" commands. For "start" show “Starting...”, for "stop" show “Stopping...”.
 
 
 
 #!------------------------------------------------------------!
-#Excercise $script:number.5
+#Excercise 9.5
 
-#Description: 
+#Description: Create an array of 5 file extensions (e.g., .txt, .jpg, .exe) and use switch to display a message depending on the file type.
 
 
 
@@ -61,27 +51,27 @@ $script:content = @"
 #!                            Medium                          !
 #!------------------------------------------------------------!
 
-#Excercise $script:number.1
+#Excercise 9.1
 
 #Description: 
 
 #!------------------------------------------------------------!
-#Excercise $script:number.2
+#Excercise 9.2
 
 #Description: 
 
 #!------------------------------------------------------------!
-#Excercise $script:number.3
+#Excercise 9.3
 
 #Description: 
 
 #!------------------------------------------------------------!
-#Excercise $script:number.4
+#Excercise 9.4
 
 #Description: 
 
 #!------------------------------------------------------------!
-#Excercise $script:number.5
+#Excercise 9.5
 
 #Description: 
 
@@ -95,35 +85,35 @@ $script:content = @"
 #!                            Integration                     ! 
 #!------------------------------------------------------------!
 
-#Excercise $script:number.1
+#Excercise 9.1
 
 #Description: 
 
 
 
 #!------------------------------------------------------------!
-#Excercise $script:number.2
+#Excercise 9.2
 
 #Description: 
 
 
 
 #!------------------------------------------------------------!
-#Excercise $script:number.3
+#Excercise 9.3
 
 #Description: 
 
 
 
 #!------------------------------------------------------------!
-#Excercise $script:number.4
+#Excercise 9.4
 
 #Description: 
 
 
 
 #!------------------------------------------------------------!
-#Excercise $script:number.5
+#Excercise 9.5
 
 #Description: 
 
@@ -131,27 +121,3 @@ $script:content = @"
 
 #!------------------------------------------------------------!
 
-"@
-
-
-if ( -not (Test-Path -Path $script:filePath$fileName)) {
-New-Item -ItemType File -Path $script:filePath -Name "$fileName"
-} else {
-Write-Host
-}
-
-if ([String]::IsNullOrWhiteSpace((Get-Content $script:filePath$fileName -Raw))) {
-Set-Content -Path $script:filePath$fileName -Value $script:content | Out-Null;
-
-Write-Host 
-"
-File name: $script:fileName
-Lesson topic: $script:topic
-
-Has been created successfully
-"
-} else {
-Write-Host "The file: $script:fileName, is not empty." 
-}
-
-PowerShell_Ise.exe -file $script:filePath$fileName

@@ -217,12 +217,46 @@ $arrayThree
 #Description: Create a function that takes a string array of file names and creates empty .txt files with those names in C:\GeneratedFiles. After creation, return how many files were created.
 
 
+<#
+[string[]]$filesName = @('testfile', 'filetest', 'anothertest');
+[int]$createdFilesCount = 0;
+
+function createFile {
+param (
+[Parameter(Mandatory=$true)]
+[string[]]$filesToCreate
+)
+
+for ($i = 0; $i -lt $filesToCreate.Length; $i++){
+
+    New-Item -ItemType file -Path C:\GeneratedFiles -Name "$($filesToCreate[$i]).txt" -Force;
+    $createdFilesCount++;
+    }
+
+    Write-Host "Total count of created files: $createdFilesCount"
+}
+
+createFile -filesToCreate $filesName
+#>
+
+
 
 #!------------------------------------------------------------!
 #Excercise 8.2
 
 #Description: Generate an array of all services whose names contain the word "Windows". Store their names in a string array, then use a loop to write each name to a file called windows_services.txt in C:\Logs.
 
+
+<#
+[string[]]$windowsProcesses = @();
+
+$windowsProcesses = (Get-Process | Where-Object {$_.ProcessName -match "windows"})
+
+
+$windowsProcesses | ForEach-Object {
+Add-Content -Path C:\Logs\widnows_services.txt -force -Value $_
+}
+#>
 
 
 #!------------------------------------------------------------!
@@ -231,6 +265,20 @@ $arrayThree
 #Description: Create two integer arrays of equal length. Write a script that multiplies elements at the same index and logs only the results greater than 100 to C:\Results\high_products.txt, including the index.
 
 
+<#
+[int[]]$script:intArrayOne = @(54,32,12,6)
+[int[]]$script:intArrayTwo = @(67,99,3,9)
+
+New-Item -ItemType Directory -Path C:\ -Name Results
+
+for ($i = 0; $i -lt $script:intArrayOne.Length; $i++){
+$score = $script:intArrayOne[$i] * $script:intArrayTwo[$i]
+if ($score -gt 100) {
+Add-Content -Path "C:\Results\high_products.txt" -Value "Index: $i scored more than 100 points. Total points: $score"
+    }
+}
+#>
+
 
 #!------------------------------------------------------------!
 #Excercise 8.4
@@ -238,11 +286,90 @@ $arrayThree
 #Description: Create a function that takes an array of process names. For each name, check if the process is running. If it is, stop the process and store its name in an array. Finally, display the array of successfully stopped processes.
 
 
+<#
+$private:storedNames = [System.Collections.ArrayList]@();
+$private:testNames = [System.Collections.ArrayList]@('explorer', 'notepad', 'iksde')
+
+Function checkProcess {
+
+[CmdletBinding()]
+
+param(
+
+    [Parameter(Mandatory=$true)]
+    [System.Collections.ArrayList]$processNamesList
+    )
+
+    begin {
+
+    Write-Verbose "Starting script..."
+
+    }
+
+    process {
+
+    Write-Verbose "Processing..."
+
+    for ($i = 0; $i -lt $processNamesList.Count; $i++){
+
+        if (Get-Process -Name "*$($processNamesList[$i])*") {
+            Stop-Process -Name "*$($processNamesList[$i])*"
+            $private:storedNames.Add($processNamesList[$i]);
+        }
+    }
+
+    Write-Verbose "Loop finished job."
+
+    }
+
+    end {
+
+    Write-Verbose "Result is ready to show..."
+
+    Write-Host "Processes that has been stopped and saved into array: $private:storedNames"
+
+    }
+}
+
+checkProcess -processNamesList $private:testNames -Verbose;
+#>
+
 
 #!------------------------------------------------------------!
 #Excercise 8.5
 
-#Description: Write a script that takes all environment variables whose names start with the letter P, stores them in an array of custom objects with fields: VariableName, ValueLength, and IsPathRelated (true if the name contains "path"). Output the array sorted by ValueLength descending.
+#Description: Write a script that takes all environment variables whose names start with the letter P, stores them in an array of 
+#custom objects with fields: VariableName, ValueLength, and IsPathRelated (true if the name contains "path"). Output the array sorted by ValueLength descending.
+
+
+<#
+$private:customObjectsArray = ([System.Collections.ArrayList]@(Get-ChildItem env:P*))
+
+$private:customObjectsArray | Select-Object @{
+Name="VariableName"; Expression = {($_.Name)}
+    },
+@{
+Name="ValueLength"; Expression = {($_.Value).Length}
+    },
+@{
+Name="IsPathRelated"; Expression = {
+
+$_.Name -match "path"
+    }
+ } | Sort-Object ValueLength -Descending
+ #>
+
+
+# @{
+#    Name = "IsPathRelated"
+#    Expression = {
+#        if ($_.Name -match "path") {
+#            "True"
+#        } else {
+#            "False"
+#        }
+#    }
+#}
 
 
 
