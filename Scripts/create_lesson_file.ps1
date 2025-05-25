@@ -1,4 +1,9 @@
-﻿[int]$script:number = 0;
+﻿#------------------------------------------------------------------------------------------
+#Description: Function to automate creation lesson file.
+#------------------------------------------------------------------------------------------
+
+
+[int]$script:number = 0;
 [string]$script:topic = "";
 [string]$script:fileName = "";
 [string]$script:filePath = "C:\Users\Administrator\Desktop\GITHUB_PowerShell\GPT_lessons\"

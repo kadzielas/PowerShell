@@ -1,3 +1,7 @@
+#------------------------------------------------------------------------------------------
+#Description: Function to automate creation personal accounts.
+#------------------------------------------------------------------------------------------
+
 Start-Transcript
 $Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
 $Length = 12
