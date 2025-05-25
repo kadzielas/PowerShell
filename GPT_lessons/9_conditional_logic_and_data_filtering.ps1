@@ -220,6 +220,17 @@ switch -Regex ($private:runningProcesses[$i]) {
 
 
 
+<#
+$script:output = Read-Host "Provide two-letter country code"
+
+switch -Wildcard ($script:output) {
+
+    "PL" {Write-Host "Poland, polish, CET+1"}
+    default {Write-Host "Provided country code is not included."}
+
+}
+#>
+
 
 
 #!------------------------------------------------------------!
@@ -232,6 +243,8 @@ switch -Regex ($private:runningProcesses[$i]) {
 #If name contains uppercase letters, mark as "Custom"
 #Else, mark as "Standard"
 #Return a structured output per user.
+
+
 
 
 
