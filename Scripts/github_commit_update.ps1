@@ -46,6 +46,7 @@ function commitUpdateToRepo {
 
     end {
         Write-Verbose "Script has successfully finished!"
+        Start-Sleep -Seconds 5
     }
 }
 
