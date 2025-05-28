@@ -1,6 +1,6 @@
 ﻿
      
-     #conditional_logic_and_data_filtering
+#conditional_logic_and_data_filtering
 
 #!------------------------------------------------------------!
 #!                            Easy                            !
@@ -245,9 +245,27 @@ switch -Wildcard ($script:output) {
 #Return a structured output per user.
 
 
+<#
+[string[]]$users = @('olx', 'ra01at', 'rata12adminha', 'WUWUX', 'mord01ko');
 
+function checkName {
+    param (
+        [string[]]$usernames
+    )
+    
+    foreach ($check in $usernames) {
+        
+        switch -Regex ($check) {
+            'admin' { Write-Host "$check Privileged" }
+            '01' { Write-Host "$check Temporary account" }
+            "^[A-Z]+$" { Write-Host "$check Custom" }
+            Default { Write-Host "$check Standard" }
+        }
+    }
+}
 
-
+checkName -usernames $users
+#>
 
 
 #!------------------------------------------------------------!
@@ -263,7 +281,26 @@ switch -Wildcard ($script:output) {
 #Else, show "Unrecognized or advanced command"
 
 
+<#
+$script:output = Read-Host "Provide PS command"
 
+function checkCommand {
+    [CmdletBinding()]
+    param (
+        [string]$providedCommand
+    )
+
+    switch -Regex ($providedCommand) {
+        '^Get-Item' { Write-Host "$providedCommand is Filesystem-related command" }
+        '^Get-(service|process)' { Write-Host "$providedCommand is System-related command" }
+        '(new-|set-)' { Write-Host "$providedCommand is Configuration command" }
+        Default { Write-Host "Unrecognized or advanced command" }
+    }
+    
+}
+
+checkCommand -providedCommand $script:output
+#>
 
 
 #!------------------------------------------------------------!
@@ -276,35 +313,53 @@ switch -Wildcard ($script:output) {
 
 #Excercise 9.1
 
-#Description: 
+#Description: Create a script that analyzes a list of installed software from the registry and classifies each based on its name. 
+#Use switch -regex to categorize software as a browser, security tool, system tool, or miscellaneous. Display a structured report for each group.
 
 
 
 #!------------------------------------------------------------!
 #Excercise 9.2
 
-#Description: 
+#Description: Write a function that takes a hashtable with usernames and login timestamps. Use switch to classify activity:
+#If login time is between 6–9 AM, mark as "Early login"
+#9 – 17 as "Regular login"
+#After 17 as "After-hours login"
+#Return a report with username, login time, and login type.
 
 
 
 #!------------------------------------------------------------!
 #Excercise 9.3
 
-#Description: 
+#Description: Create a script that lists all files in a given directory (ask user for path), groups them by extension using switch, and displays:
+#File name
+#Type (Text, Image, Archive, Executable, Other)
+#Size in KB
+#Use Split-Path, Get-Item, switch, and loops.
 
 
 
 #!------------------------------------------------------------!
 #Excercise 9.4
 
-#Description: 
+#Description: Write a script that analyzes a log file line by line. Use switch -regex to count how many lines:
+#Contain the word error
+#Contain the word warning
+#Are empty
+#Display the final count and percentage breakdown.
 
 
 
 #!------------------------------------------------------------!
 #Excercise 9.5
 
-#Description: 
+#Description: Create a function that receives a list of IP addresses and classifies them using switch:
+#Starts with 192. → "Private"
+#Starts with 10. → "Private"
+#Starts with 172.16–172.31 → "Private"
+#Any other → "Public"
+#Return a grouped output with IP and classification.
 
 
 
