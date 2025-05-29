@@ -317,6 +317,23 @@ checkCommand -providedCommand $script:output
 #Use switch -regex to categorize software as a browser, security tool, system tool, or miscellaneous. Display a structured report for each group.
 
 
+<# 
+$apps = [System.Collections.ArrayList]::new();
+
+$apps = Get-AppPackage | Select-Object name
+
+foreach ($check in $apps) {
+
+    switch -regex ($check) {
+        "(security|windows)" { Write-Host "$check is recognized as security tool" }
+        "system" { Write-Host "$check is recognized as system tool" }
+        "browser" { Write-Host "$check is recognized as browser" }
+        Default { Write-Host "$check is recognized as miscellaneous" }
+    }
+
+}
+ #>
+
 
 #!------------------------------------------------------------!
 #Excercise 9.2
@@ -329,6 +346,35 @@ checkCommand -providedCommand $script:output
 
 
 
+<# 
+$private:names = [System.Collections.ArrayList]@("seba", "ola", "magda", "adam", "riki");
+
+[hashtable]$userInfo = [ordered]@{}
+
+for ($i = 0; $i -lt 5; $i++) {
+    $userInfo["user_$i"] = [PSCustomObject]@{
+        Name      = $private:names[$i];
+        LoginTime = (Get-Date).AddMinutes(- $i * 17).AddHours(- $i * 3).AddSeconds(- $i * 4)
+    }
+}
+
+$userInfo
+
+foreach ($selected in $userInfo.Values) {
+    $hour = [int]$selected.LoginTime.toString("HH");
+    switch ($hour) {
+        { $_ -GE 6 -and $_ -LT 9 } { Write-Host "$($selected.Name):Early login" }
+        { $_ -GE 9 -and $_ -LT 17 } { Write-Host "$($selected.Name):Regular login" }
+        { $_ -GE 17 -and $_ -LT 23 } { Write-Host "$($selected.Name):After-hours login" }
+        { $_ -GE 0 -and $_ -LT 6 } { Write-Host "$($selected.Name):After-hours login" }
+    }
+
+}
+ #>
+
+
+
+
 #!------------------------------------------------------------!
 #Excercise 9.3
 
@@ -336,7 +382,30 @@ checkCommand -providedCommand $script:output
 #File name
 #Type (Text, Image, Archive, Executable, Other)
 #Size in KB
-#Use Split-Path, Get-Item, switch, and loops.
+
+
+
+<# 
+$Private:selectedPath = Read-Host "provide path to directory"
+
+if (Test-Path $Private:selectedPath) {
+    $private:files = Get-ChildItem -Path $Private:selectedPath -File
+    
+    $private:extensions = @($private:files | Select-Object Extension -Unique | -replace "^@{Extension=" '' -replace "}$" '')
+
+    for ($i = 0; $i -lt $private:files.Length; $i++) {
+
+        switch -regex ($private:files[$i]) {
+
+            "$($private:extensions[0])$" { Write-Host "Name: $(Split-Path $private:files[$i].Directory) `n Type: Other `n Size: $([System.Math]::Round(($private:files[$i].Length / 1KB), 2)) KB" }
+            "$($private:extensions[1])$" { Write-Host "Name: $(Split-Path $private:files[$i].Directory) `n Type: Executable `n Size: $([System.Math]::Round(($private:files[$i].Length / 1KB), 2)) KB `n -------------" }
+            
+        
+        }
+    }
+    
+}
+ #>
 
 
 

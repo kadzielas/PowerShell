@@ -37,7 +37,7 @@ function commitUpdateToRepo {
 
         }
         catch {
-            Write-Host "An error occurred: $_"
+            Write-Error "An error occurred: $_"
         }
         finally {
             Write-Verbose "Processing finished..."
@@ -46,7 +46,7 @@ function commitUpdateToRepo {
 
     end {
         Write-Verbose "Script has successfully finished!"
-        Start-Sleep -Seconds 5
+        Start-Sleep -Seconds 3
     }
 }
 
