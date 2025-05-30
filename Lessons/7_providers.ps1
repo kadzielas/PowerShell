@@ -1,6 +1,6 @@
 ﻿
      
-     #providers
+#providers
 
 #!------------------------------------------------------------!
 #!                            Easy                            !
@@ -225,10 +225,7 @@ Write-Host "File doesn't exist"
 
 #Description: Find all .log files in C:\Windows\Temp that were created in the last 7 days. For each file, display its name, size in KB, and whether the filename contains the word "error".
 
-<<<<<<< HEAD
 <#
-=======
->>>>>>> 02568a6c543403b2ccdbc60575944a2de1112134
  Get-ChildItem -Path "C:\Windows\Temp" -Filter *.log | ForEach-Object {
  if ($_.LastWriteTime -gt (Get-Date).AddDays(-7)) {
  [bool]$errorexist = $false;
@@ -239,10 +236,7 @@ Write-Host "File doesn't exist"
  
  }
 }
-<<<<<<< HEAD
 #>
-=======
->>>>>>> 02568a6c543403b2ccdbc60575944a2de1112134
 
 #!------------------------------------------------------------!
 #Excercise 7.2
@@ -250,7 +244,6 @@ Write-Host "File doesn't exist"
 #Description: List all PowerShell functions (from function:) whose names contain the letter o, then save these names to a file named functions_report.txt in a new folder called C:\FunctionReports.
 
 
-<<<<<<< HEAD
 <#
 New-Item -ItemType Directory -Path "C:\" -Name "FunctionReports"
 Get-ChildItem function: | Where-Object {$_.Name -match "o" -and $_.CommandType -match "Function"} |
@@ -258,15 +251,12 @@ Set-Content -Path "C:\FunctionReports\functions_report.txt" -Force;
 Get-Content -Path "C:\FunctionReports\functions_report.txt";
 #>
 
-=======
->>>>>>> 02568a6c543403b2ccdbc60575944a2de1112134
 
 #!------------------------------------------------------------!
 #Excercise 7.3
 
 #Description: Create three custom aliases: one for creating a file, one for opening Notepad, and one for listing running processes. Use them in a script to verify that each alias works correctly.
 
-<<<<<<< HEAD
 <#
 Set-Alias -Name createFileAlias -Value New-Item
 Set-Alias -Name notepadAlias -Value notepad.exe
@@ -276,8 +266,6 @@ createFileAlias -Path C:\ -Name testfile -ItemType File
 notepadAlias
 showProcessesAlias
 #>
-=======
->>>>>>> 02568a6c543403b2ccdbc60575944a2de1112134
 
 
 #!------------------------------------------------------------!
@@ -285,22 +273,17 @@ showProcessesAlias
 
 #Description: List all environment variables whose values contain the word "System". Save the output to C:\Logs\env_log.txt, and include a timestamp at the top of the file.
 
-<<<<<<< HEAD
 <#
 New-Item -ItemType Directory -Path C:\ -Name Logs
 Add-Content -Path C:\Logs\env_log.txt -Force -Value (Get-Date)
 Get-ChildItem env:*system* | Add-Content -Path C:\Logs\env_log.txt
 #>
-=======
-
->>>>>>> 02568a6c543403b2ccdbc60575944a2de1112134
 
 #!------------------------------------------------------------!
 #Excercise 7.5
 
 #Description: Write a function that takes a process name as input. If the process is running, stop it and log a message with a timestamp to C:\ProcessLogs\terminated.txt. If it is not running, log that it was not found, also with a timestamp.
 
-<<<<<<< HEAD
 <#
 function checkProcess{
 [cmdletbinding()]
@@ -332,8 +315,6 @@ Get-Content C:\ProcessLogs\terminated.txt
 } 
 #>
 
-=======
->>>>>>> 02568a6c543403b2ccdbc60575944a2de1112134
 
 
 #!------------------------------------------------------------!

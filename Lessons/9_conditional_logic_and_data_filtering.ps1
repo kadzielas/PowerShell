@@ -420,6 +420,35 @@ if (Test-Path $Private:selectedPath) {
 
 
 
+<# 
+$filepath = Read-Host "Provide path to file"
+$content = Get-Content -Path $filepath
+$errorCount = 0
+$warningCount = 0
+$emptyCount = 0
+
+foreach ($line in $content) {
+    switch -Regex ($line) {
+        '^\s*$' { $emptyCount++ ; break }
+        'error' { $errorCount++ ; break }
+        'warning' { $warningCount++ ; break }
+        default { }  
+    }
+}
+
+$total = $content.Count
+
+Write-Host ""
+Write-Host "Final line count:"
+Write-Host "Error: $errorCount"
+Write-Host "Warning: $warningCount"
+Write-Host "Empty: $emptyCount"
+Write-Host ""
+Write-Host "Total % of errors: $([math]::Round(($errorCount / $total) * 100))%"
+ #>
+ 
+
+
 #!------------------------------------------------------------!
 #Excercise 9.5
 
@@ -429,6 +458,65 @@ if (Test-Path $Private:selectedPath) {
 #Starts with 172.16–172.31 → "Private"
 #Any other → "Public"
 #Return a grouped output with IP and classification.
+
+
+
+<# 
+[string[]]$ips = @("192.168.20.1", "10.32.12.1", "155.111.232.1", "172.16.23.23", "172.14.1.1", "172.31.23.23")
+[hashtable]$sorted = @{};
+
+function sortIPs {
+    [CmdletBinding()]
+    param (
+        [string[]]$ipsToSort
+    )
+    
+    begin {
+        Write-Verbose "starting.."
+    }
+    
+    process {
+        
+        for ($i = 0; $i -lt $ipsToSort.Length; $i++) {
+            switch -regex ($ipsToSort[$i]) {
+
+                "^192." {
+                    $sorted["IP_ID_$i"] = [PSCustomObject]@{
+                        addressIP      = $ipsToSort[$i];
+                        classification = "private";
+                    }
+                }
+                "^10." {
+                    $sorted["IP_ID_$i"] = [PSCustomObject]@{
+                        addressIP      = $ipsToSort[$i];
+                        classification = "private";
+                    }
+                }
+                "(^172.16|^172.31)" {
+                    $sorted["IP_ID_$i"] = [PSCustomObject]@{
+                        addressIP      = $ipsToSort[$i];
+                        classification = "private";
+                    }
+                }
+                Default {
+                    $sorted["IP_ID_$i"] = [PSCustomObject]@{
+                        addressIP      = $ipsToSort[$i];
+                        classification = "public";
+                    }
+                }
+            }
+        }
+
+    }
+    
+    end {
+        Write-Verbose "finishing..."
+        $sorted.Values | Sort-Object classification
+    }
+}
+
+sortIPs -ipsToSort $ips -Verbose
+ #>
 
 
 
