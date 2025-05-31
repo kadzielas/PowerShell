@@ -18,7 +18,7 @@
 | ✅    | 6      | Command Syntax                              | Structure of commands, parameters, aliases, and redirection.                                  |
 | ✅    | 7      | PowerShell Providers                        | Navigating environment, registry, aliases, and variables via providers.                       |
 | ✅    | 8      | Arrays and Variables                        | Working with arrays, hashtables, variable types, and scopes.                                  |
-| ❌    | 9      | Advanced Conditional Logic & Data Filtering | Complex conditions, switch blocks, and nested logical filtering.                              |
+| ✅    | 9      | Advanced Conditional Logic & Data Filtering | Complex conditions, switch blocks, and nested logical filtering.                              |
 | ❌    | 10     | Hashtables Advanced                         | Creating, accessing, nesting, and using hashtables in depth.                                  |
 | ❌    | 11     | Error Handling                              | Try/catch/finally blocks and handling different types of errors.                              |
 | ❌    | 12     | Scripting Basics                            | Writing reusable scripts, using parameters, and basic logic.                                  |
