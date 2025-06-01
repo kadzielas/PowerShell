@@ -1,4 +1,4 @@
-﻿
+
      
 #hashtables_advanced
 
@@ -148,8 +148,55 @@ Write-Host "Done count: $($counts[2])"
 #Count how many employees work each shift.
 
 
+<# 
+$employeeShifts = [ordered]@{};
+$names = @("adam", "adrian", "bogusz");
+$shifts = @{
+     Morning = 0
+     Evening = 0
+     Night   = 0
+}
+$customViewEmployee = @{};
+
+for ($i = 0; $i -lt $names.Count; $i++) {
+     $employeeShifts["ID_employee.$i"] = [PSCustomObject]@{
+          Name  = $names[$i]
+          Shift = ($shifts.Keys | Get-Random);
+          Age   = (Get-Random -Minimum 18 -Maximum 65)
+     }
+}
 
 
+for ($i = 0; $i -lt $employeeShifts.Keys.Count; $i++) {
+     
+     switch ($employeeShifts["ID_employee.$i"].Shift) {
+          'Morning' { $shifts.Morning++ }
+          'Evening' { $shifts.Evening++ }
+          'Night' { $shifts.Night++ }
+     }
+}
+
+foreach ($employee in $employeeShifts.Keys) {
+     $customViewEmployee[$employee] = [PSCustomObject]@{
+          Name  = $employeeShifts[$employee].name
+          Shift = $employeeShifts[$employee].shift
+          Age   = $employeeShifts[$employee].Age
+          
+     }
+}
+
+$customViewEmployee = $customViewEmployee.GetEnumerator() | Format-Table Name, Value -AutoSize | Out-String
+
+Write-Host
+"
+Employees information:
+
+$customViewEmployee
+------------------------
+Shifts statistics:
+$($shifts | Out-String)
+"
+ #>
 
 
 #!------------------------------------------------------------------------------------------------------!
