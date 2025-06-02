@@ -99,7 +99,7 @@ function checkConnection {
         }
 
         try {
-
+            #arp -a (szuka hostów w lokalnej sieci)
             $script:destinationIp = $script:tncResult.RemoteAddress
             $script:destinationHostname = ([System.Net.Dns]::GetHostEntry($script:destinationIp).HostName)
             $script:destinationServer = $script:webRequestResult.GetResponse().server
