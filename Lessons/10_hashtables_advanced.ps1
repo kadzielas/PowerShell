@@ -215,7 +215,33 @@ $($shifts | Out-String)
 #Display all departments and how many employees work in each.
 
 
+<# 
+$script:names = @('adam', 'eric', 'riki', 'bucz', 'meeko', 'dudu');
+$script:departments = @('IT', 'HR', 'Logistics', 'Administration', 'Security');
+$script:company = @{};
+$script:count = 0;
 
+for ($i = 0; $i -lt $script:departments.Length; $i++) {
+     
+     $script:company[($script:departments[$i])] = @{
+          
+          employees = Get-Random -InputObject $script:names -Count (Get-Random -Minimum 1 -Maximum 4)
+     };
+
+}
+
+foreach ($departament in $script:company.Keys) {
+
+     Write-Host "`nDepartment: $departament"
+
+     foreach ($employee in $script:company[$departament].Values) {
+          Write-Host "Staff: $employee"
+          
+          Write-Host "count: $($script:company[$departament].employees.Count)"
+          
+     }
+}
+ #>
 
 
 
