@@ -254,6 +254,27 @@ foreach ($departament in $script:company.Keys) {
 
 
 
+<# 
+[hashtable]$script:warehouseStock = @{};
+$script:productsNames = @('water', 'milk', 'oil', 'wine', 'cola');
+
+for ($i = 0; $i -lt $script:productsNames.Length; $i++) {
+     $script:warehouseStock[$script:productsNames[$i]] = @{
+          quantity = Get-Random -Minimum 30 -Maximum 70
+     }
+     
+}
+
+foreach ($product in $script:warehouseStock.Keys) {
+     if ($script:warehouseStock[$product].quantity -lt 50) {
+          $script:warehouseStock[$product].quantity = [System.Math]::Round($script:warehouseStock[$product].quantity * 1.1, 0)
+          
+     }
+     Write-Host "`nProduct name: $product `n Quantity: $($script:warehouseStock[$product].quantity)"
+}
+ #>
+
+
 
 
 #!------------------------------------------------------------------------------------------------------!
