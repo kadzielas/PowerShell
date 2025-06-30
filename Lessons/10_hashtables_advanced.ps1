@@ -285,6 +285,39 @@ foreach ($product in $script:warehouseStock.Keys) {
 #Display all orders with Pending status only.
 
 
+<# 
+$private:customerNames = @('Frankie', 'Jimmy', 'Angela', 'Poly', 'Riki');
+$private:order = @{};
+enum Status {
+     InProgress
+     Pending
+     Finished
+}
+
+for ($i = 0; $i -lt $private:customerNames.Count; $i++) {
+     $getStatus = [enum]::GetValues([Status])
+     $status = Get-Random -InputObject $getStatus
+     $amount = Get-Random -Minimum 10 -Maximum 30
+     $orderID = Get-Random -Minimum 100 -Maximum 150
+     $private:order["$($orderID)_order"] = [PSCustomObject]@{
+          customerName = $private:customerNames[$i]
+          totalAmount  = $amount
+          status       = $status
+     }
+    
+}
+
+
+foreach ($key in $private:order.Keys) {
+     
+     switch ($private:order[$key].status) {
+          "Pending" {
+               Write-Host ("Customer name: $($private:order[$key].customerName)`nAmount: $($private:order[$key].totalAmount)`nStatus: $($private:order[$key].status)`n--------")
+          }
+     }
+}
+ #> 
+
 
 
 
