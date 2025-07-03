@@ -318,7 +318,7 @@ foreach ($key in $private:order.Keys) {
 }
  #> 
 
-
+    
 
 
 #!------------------------------------------------------------------------------------------------------!
@@ -329,7 +329,30 @@ foreach ($key in $private:order.Keys) {
 #Calculate the average for each student.
 
 
+<# 
+$students = @{};
+$file = Get-ChildItem -File C:\Users\Administrator\Downloads\students_full_grades.csv
+$header = @('firstname', 'lastname', 'grades1', 'grades2', 'grades3', 'grades4')
+$csv = Import-Csv $file -Header $header
 
+for ($i = 0; $i -lt $csv.Count; $i++) {
+     [int]$ID = Get-Random -Minimum 130 -Maximum 760
+     [int[]]$grades = @($csv[$i].grades1, $csv[$i].grades2, $csv[$i].grades3, $csv[$i].grades4)
+     $average = ($grades | Measure-Object -Average).Average
+    
+     $students["$($ID)_$($csv[$i].lastname)"] = @{
+          Grades  = $grades
+          Average = $average
+     }
+}
+
+
+foreach ($object in $students.GetEnumerator()) {
+     "$($object.key) avarage grades is $($object.Value.Average)"
+}
+
+exit
+ #>
 
 
 #!------------------------------------------------------------------------------------------------------!
@@ -340,6 +363,29 @@ foreach ($key in $private:order.Keys) {
 #Use a switch to classify machines into OK (0), Warning (1–5), or Critical (6+).
 
 
+<# 
+$machineData = @{};
+
+for ($i = 0; $i -lt 10; $i++) {
+     $ID = Get-Random -Minimum 20 -Maximum 99
+     $errors = Get-Random -Minimum 0 -Maximum 10
+
+     $machineData[$ID] = @{
+          errorsCount = $errors    
+     }
+}
+     
+foreach ($machine in $machineData) {
+     
+     switch ($machine.Values.errorsCount.GetEnumerator()) {
+          0 { Write-Host "$($_) - OK" }
+          { $_ -ge 1 -and $_ -lt 6 } { Write-Host "$($_)- Warning" }
+          { $_ -ge 6 } { Write-Host "$($_) - Critical" }
+     }
+}
+
+exit
+ #>
 
 
 
