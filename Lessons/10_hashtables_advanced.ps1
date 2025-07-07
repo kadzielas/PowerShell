@@ -403,10 +403,39 @@ exit
 #Excercise 10.1
 
 #Description: Use a hashtable to store user logins (username → timestamp).
-#Use switch to classify logins as Early (6–9 AM), Regular (9–17), or Late (after 17), and show a report like in Lesson 9.
+#Use switch to classify logins as Early (6–9 AM), Regular (9–17), or Late (after 17).
 
 
 
+<# 
+$logins = @{};
+
+for ($i = 0; $i -lt 10; $i++) {
+     $ID = Get-Random -Minimum 10 -Maximum 50
+     $username = "user$ID"
+     $x = Get-Random -Minimum 1 -Maximum 24
+
+     $logins[$ID] = @{
+          username  = $username;
+          loginTime = (Get-Date).AddDays(-$x).AddHours( + ($x * 2)).AddMinutes( - ($x * 17)).AddSeconds( + ($x * 3));
+     }
+}
+
+foreach ($login in $logins) {
+
+     
+     switch ($login.Values.loginTime.Hour) {
+          { $_ -ge 6 -and $_ -lt 10 } { Write-Host "$_ has classified as Early" }
+          { $_ -gt 10 -and $_ -lt 18 } { Write-Host "$_ has classified as Regular" }
+          { $_ -gt 18 -and $_ -lt 24 } { Write-Host "$_ has classified as Late" }
+          { $_ -gt 00 -and $_ -lt 5 } { Write-Host "$_ has classified as Late" }
+          default { }
+          
+     }
+}
+
+exit
+ #>
 
 
 
@@ -417,9 +446,24 @@ exit
 #Description: Read a .txt file where each line contains a product and quantity (e.g., Milk,4).
 #Convert it into a hashtable and calculate the total quantity of all products.
 
-
-
-
+<#      
+$lines = Get-Content '.\products.txt'
+$products = @{}
+foreach ($line in $lines) {
+     $name, $qty = $line -split ','
+     $name = $name.Trim()
+     $qty = [int]$qty
+     if ($products.ContainsKey($name)) {
+          $products[$name] += $qty
+     }
+     else {
+          $products[$name] = $qty
+     }
+}
+$products.GetEnumerator() | ForEach-Object { "{0,-10} : {1,3}" -f $_.Key, $_.Value }
+$total = ($products.Values | Measure-Object -Sum).Sum
+Write-Host "`nTotal quantity of all products: $total"
+ #>
 
 
 #!------------------------------------------------------------------------------------------------------!
@@ -429,9 +473,27 @@ exit
 #Description: Generate 10 random IPs. Create a hashtable where the key is the IP and the value is its classification (Private, Public) using switch -regex. 
 #Sort and display by classification.
 
-
-
-
+<# 
+$ips = 1..10 | ForEach-Object {
+     "{0}.{1}.{2}.{3}" -f (Get-Random -Minimum 1 -Maximum 255),
+     (Get-Random -Minimum 0 -Maximum 255),
+     (Get-Random -Minimum 0 -Maximum 255),
+     (Get-Random -Minimum 1 -Maximum 255)
+}
+$ipTable = @{}
+foreach ($ip in $ips) {
+     $class = switch -Regex ($ip) {
+          '^10\.' { 'Private (10.0.0.0/8)'; break }
+          '^192\.168\.' { 'Private (192.168.0.0/16)'; break }
+          '^172\.(1[6-9]|2[0-9]|3[0-1])\.' { 'Private (172.16.0.0/12)'; break }
+          default { 'Public' }
+     }
+     $ipTable[$ip] = $class
+}
+$ipTable.GetEnumerator() |
+Sort-Object Value, Key |
+Format-Table @{n = 'IP'; e = { $_.Key } }, @{n = 'Classification'; e = { $_.Value } } -AutoSize
+ #>
 
 #!------------------------------------------------------------------------------------------------------!
 
@@ -440,9 +502,29 @@ exit
 #Description: Create a hashtable fileStats where the key is a filename and the value is another hashtable containing sizeKB and type.
 #Group and display files by type using switch.
 
-
-
-
+<# 
+$fileStats = @{}
+Get-ChildItem -File | ForEach-Object {
+     $ext = $_.Extension.ToLower()
+     $type = switch -Wildcard ($ext) {
+          '.txt' { 'Text'   ; break }
+          '.log' { 'Log'    ; break }
+          '.ps1' { 'Script' ; break }
+          '.jpg' { 'Image'  ; break }
+          default { 'Other' }
+     }
+     $fileStats[$_.Name] = @{
+          sizeKB = [math]::Round($_.Length / 1KB, 2)
+          type   = $type
+     }
+}
+$fileStats.GetEnumerator() |
+Group-Object { $_.Value.type } |
+ForEach-Object {
+     Write-Host "`nType: $($_.Name)"
+     $_.Group | ForEach-Object { "{0,-20} {1,8} KB" -f $_.Key, $_.Value.sizeKB }
+}
+ #>
 
 #!------------------------------------------------------------------------------------------------------!
 
@@ -451,9 +533,25 @@ exit
 #Description: Analyze a log file where each line contains [username] [status].
 #Build a hashtable where each key is a username and the value is a count of how many error, warning, or ok statuses they had. Summarize the data.
 
-
-
-
+<# 
+$lines = Get-Content '.\activity.log'
+$userStats = @{}
+foreach ($line in $lines) {
+     $user, $status = $line -split '\s+', 2
+     if (-not $userStats.ContainsKey($user)) {
+          $userStats[$user] = @{ Error = 0; Warning = 0; OK = 0 }
+     }
+     switch ($status.ToLower()) {
+          'error' { $userStats[$user].Error++ }
+          'warning' { $userStats[$user].Warning++ }
+          default { $userStats[$user].OK++ }
+     }
+}
+$userStats.GetEnumerator() | ForEach-Object {
+     $u = $_.Key; $c = $_.Value
+     "{0,-10} Errors={1,2}   Warnings={2,2}   OK={3,2}" -f $u, $c.Error, $c.Warning, $c.OK
+}
+ #>
 
 #!------------------------------------------------------------------------------------------------------!
 
