@@ -209,6 +209,8 @@ catch [System.Management.Automation.ItemNotFoundException] {
 
 #Description: In the catch block, output the error's Exception.Message, CategoryInfo, and InvocationInfo.
 
+
+<# 
 try {
      Get-Process sadas -ErrorAction stop
 }
@@ -221,7 +223,7 @@ catch {
      Write-Host "|InvocationInfo: $($_.InvocationInfo)"
      Write-Host "|------------------------"
 }
-
+ #>
 
 
 #!------------------------------------------------------------------------------------------------------!
@@ -240,7 +242,26 @@ catch {
 #Description: Create a hashtable of items with stock counts. Try dividing a number by each count. Use try-catch to avoid divide-by-zero.
 
 
+<# 
+$stock_stats = @{
+     Wood  = 12
+     Stone = 30
+     Water = 0
+     Oil   = 3
+}
 
+try {
+     
+     foreach ($object in $stock_stats.Values) {
+          100 / [int]$object
+          
+     } 
+
+}
+catch [System.ArithmeticException] {
+     Write-Host "Error: $_"
+}
+ #>
 
 
 
@@ -250,9 +271,22 @@ catch {
 
 #Description: Use switch logic to classify numbers. If input is not a number, catch the error and notify the user.
 
+<# 
+$input = Read-Host "Provide number"
 
+try {
+     switch ([int]$input) {
+          { $_ -is [int] } { Write-Host "Number as hell: $_" }
+          { $_ -isnot [int] } { Write-Host "$_ is not number!!!" }
+     } 
+}
+catch [System.Management.Automation.MethodInvocationException], [System.Management.Automation.CommandNotFoundException],
+[System.Management.Automation.RuntimeException] {
+     Write-Host "$_"
+}
 
-
+exit
+ #>
 
 
 #!------------------------------------------------------------------------------------------------------!
@@ -261,9 +295,28 @@ catch {
 
 #Description: Read grades from a CSV. If any grade is not a number, catch the error and log "Invalid data".
 
+<# 
+$student = @{}
 
-
-
+try {
+     $gradesCsv = Import-Csv -Path "C:\Users\Administrator\Downloads\students_full_grades.csv"
+     $gradesCsv | ForEach-Object {
+          $student["$($_.'First Name')_$($_.'Last Name')"] = [PSCustomObject]@{
+               grades = [int]::Parse($_.'Grade 1')
+          }
+     }
+     
+     switch ($student.Values.grades) {
+          { $_ -isnot [int] } {
+               Write-Host "$_ is invalid data"
+          }
+          Default { Write-Host "$_ is correct data" }
+     }
+}
+catch {
+     Write-Host "Error: $_"
+}
+ #>
 
 #!------------------------------------------------------------------------------------------------------!
 
