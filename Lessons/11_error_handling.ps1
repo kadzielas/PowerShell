@@ -325,7 +325,21 @@ catch {
 #Description: Read a log file line-by-line. If a line is missing expected parts (e.g., [status]), catch the parsing error.
 
 
+<# 
+try {
+     $parseError = New-Object System.Management.Automation.ParseException
+     $status = Get-Content -Path "C:\log.txt"
+     switch -regex ($status) {
+          '^\[status\]\s+(active|inactive)$' { Write-Host "$_ --- sounds good" }
+          Default { Write-Error "$_ - $parseError"; continue }
+     }
+}
+catch [System.Web.ParserError] {
+     Write-Host "Error: $_"
+}
 
+exit
+ #>
 
 
 #!------------------------------------------------------------------------------------------------------!
@@ -335,8 +349,52 @@ catch {
 #Description: Build a function that throws if an item is out of stock. Catch the error and append it to an error log file.
 
 
+$prompt = @(
+     "`nProducts offered by market: wood, stone, water, food"
+     "`nProvide name of product"
+)
+$inputUser = Read-Host $prompt
+$stocks = @{}
+
+function checkStockAvailability {
+     
+     param (
+          [string]$product
+     )
+     
+     $productsNames = @('wood', 'stone', 'water', 'food');
+     
 
 
+     try {
+          for ($i = 0; $i -lt $productsNames.Count; $i++) {
+
+               $stocks[$productsNames[$i]] = @{
+                    Count = Get-Random -Minimum 0 -Maximum 10
+               }
+          }
+
+          switch ($product) {
+               { $_ -match $stocks.name } {
+                    if ([int]$stocks.Count -ge 1) {
+                         Write-Host "$_ count is: $($stocks.$product.count)"
+                    }
+                    else {
+                         Throw "$_ is unavailable, count: $($stocks.$product.count)"
+                    }
+               }
+               Default { Write-Host "We don't offer provided product: $product" }
+          }
+
+     }
+     catch {
+          write-host "Error: $_"
+     }
+}
+
+checkStockAvailability -product $inputUser
+
+exit
 
 #!------------------------------------------------------------------------------------------------------!
 
