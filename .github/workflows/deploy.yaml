@@ -1,0 +1,27 @@
+name: 'PowerShell testing scripts'
+
+run-name: Testing code to ${{ inputs.deploy_target }} pulled by @${{ github.actor }}
+on: 
+  workflow_dispatch:
+  push:
+    branches:
+    - main
+    - dev
+    paths-ignore:
+      - '.github/'
+      - '!.dockerignore'
+
+jobs:
+  test:
+    name: "Run first test"
+    runs-on: windows-latest
+  
+    steps:
+      - name: "Checkout repo"
+        uses: actions/checkout@4
+
+      - name: "Display current directory"
+        run: Get-Location
+        shell: pwsh
+
+
