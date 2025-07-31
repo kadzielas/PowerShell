@@ -1,10 +1,14 @@
 name: 'PowerShell testing scripts'
 
-run-name: Testing code to ${{ inputs.deploy_target }} pulled by @${{ github.actor }}
+run-name: Testing code pulled by @${{ github.actor }} on branch @${{ github.ref_name }}
 on: 
   workflow_dispatch:
   push:
     branches:
+    - main
+    - test
+  pull_request:
+    branches: 
     - main
     - test
     paths-ignore:
@@ -12,16 +16,61 @@ on:
       - '!.dockerignore'
 
 jobs:
-  test:
-    name: "Run first test"
+  general-check:
+    name: "Scripts quality check"
     runs-on: windows-latest
   
     steps:
       - name: "Checkout repo"
         uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871
 
-      - name: "Display current directory"
-        run: Get-Location
+      - name: "Install PSScriptAnalyzer"
+        run: Install-Module -Name PSScriptAnalyzer -Froce -Scope CurrentUser
+        shell: pwsh
+
+      - name: "Run Analyzer"
+        run: |
+          $results = Invoke-ScriptAnalyzer -Path . -Recurse -Severity Warning,Error 
+          if ($results.Count -gt 0) {
+          $results | Format-Table 
+          throw "::error::PSScriptAnalyzer found issue"
+            }
+        shell: pwsh
+        
+      - name: "Run Pester Tests"
+        run: |
+          if (Test-Path "./tests") {
+            Invoke-Pester -Path ./tests -Output Detailed
+            } else {
+              Write-Host "No test folder found, skipping"
+              }
+        shell: pwsh
+
+      - name: "Environment info"
+        run: |
+          $PSVersionTable
         shell: pwsh
 
 
+  connection-check:
+      name: "Connection script check"
+      runs-on: windows-latest
+
+      steps:
+        - name: "Check https://google.com connection status"
+          run: |
+            validURL -output https://google.com
+          shell: pwsh
+        
+        - name: "Install PSScriptAnalyzer"
+          run: Install-Module -Name PSScriptAnalyzer -Froce -Scope CurrentUser
+          shell: pwsh
+
+        - name: "Run Analyzer"
+          run: |
+            $results = Invoke-ScriptAnalyzer -Path . -Recurse -Severity Warning,Error 
+            if ($results.Count -gt 0) {
+            $results | Format-Table 
+            throw "::error::PSScriptAnalyzer found issue"
+              }
+          shell: pwsh
