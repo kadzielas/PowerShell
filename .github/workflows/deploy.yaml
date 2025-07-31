@@ -59,7 +59,7 @@ jobs:
       steps:
         - name: "Check https://google.com connection status"
           run: |
-            . ./scripts/validURL.ps1
+            . ./scripts/check_connection.ps1
             validURL -output https://google.com
           shell: pwsh
         
