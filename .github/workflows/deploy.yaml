@@ -59,11 +59,12 @@ jobs:
       steps:
         - name: "Check https://google.com connection status"
           run: |
+            . ./scripts/validURL.ps1
             validURL -output https://google.com
           shell: pwsh
         
         - name: "Install PSScriptAnalyzer"
-          run: Install-Module -Name PSScriptAnalyzer -Froce -Scope CurrentUser
+          run: Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
           shell: pwsh
 
         - name: "Run Analyzer"
