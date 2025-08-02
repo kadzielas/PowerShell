@@ -2,7 +2,10 @@
 #Description: Function to automate creation personal accounts.
 #------------------------------------------------------------------------------------------
 function New-User-Account {
-
+    [CmdletBinding(SupportsShouldProcess = $true)]
+    param (
+        [string]$DeviceName
+    )
     try {
         Start-Transcript
         $Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'

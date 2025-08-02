@@ -30,6 +30,14 @@ jobs:
           Write-Host "Working dir: $PWD"
           Get-ChildItem -Recurse
 
+      - name: "Ensure UTF-8 without BOM"
+        run: |
+          Get-ChildItem -Recurse -Filter *.ps1 | ForEach-Object {
+          $content = Get-Content $_.FullName -Raw
+          Set-Content $_.FullName -Value $content -Encoding UTF8
+          }
+        shell: pwsh
+
       - name: "Install PSScriptAnalyzer"
         run: Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
         shell: pwsh
@@ -69,7 +77,7 @@ jobs:
         - name: "Check https://google.com connection status"
           run: |
             ./scripts/check_connection.ps1
-            validURL -output "https://google.com"
+            Test-Connection-HTTPS -output "https://google.com"
           shell: pwsh
         
         - name: "Install PSScriptAnalyzer"

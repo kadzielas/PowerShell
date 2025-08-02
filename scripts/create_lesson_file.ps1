@@ -206,19 +206,16 @@ if ( -not (Test-Path -Path $script:filePath$fileName)) {
      New-Item -ItemType File -Path $script:filePath -Name "$fileName"
 }
 else {
-     Write-Output
+     Write-Output "File has already exist"
 }
 
 if ([String]::IsNullOrWhiteSpace((Get-Content $script:filePath$fileName -Raw))) {
      Set-Content -Path $script:filePath$fileName -Value $script:content | Out-Null;
 
-     Write-Output 
-     "
-File name: $script:fileName
+     Write-Output"File name: $script:fileName
 Lesson topic: $script:topic
 
-Has been created successfully
-"
+Has been created successfully"
 }
 else {
      Write-Output "The file: $script:fileName, is not empty." 
