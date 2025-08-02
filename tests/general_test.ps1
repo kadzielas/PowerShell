@@ -1,4 +1,4 @@
-function Get-EvenNumber {
+cufunction Get-EvenNumber {
     [CmdletBinding()]
     param (
         # Accepts integers 1–100 from pipeline with help message

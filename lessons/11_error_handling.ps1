@@ -19,7 +19,7 @@ try {
      Get-Content -Path "C:/x/D.txt" -ErrorAction Stop
 }
 catch {
-     Write-Host "Error: $_"
+     Write-Output "Error: $_"
 }
  #>
 
@@ -36,7 +36,7 @@ try {
      5 / 0
 }
 catch [System.Management.Automation.RuntimeException] {
-     Write-Host "Error: $_"
+     Write-Output "Error: $_"
 }
  #>
 
@@ -54,7 +54,7 @@ try {
      [int]::Parse($string);
 }
 catch [System.Management.Automation.RuntimeException] {
-     Write-Host "Error: $_"
+     Write-Output "Error: $_"
 }
  #>
 
@@ -71,7 +71,7 @@ try {
      Get-Content -Path C:\Windows\System32\config\SAM -ErrorAction Stop 
 }
 catch [System.IO.IOException] {
-     Write-Host "Error: $_"
+     Write-Output "Error: $_"
 }
 #>
 
@@ -88,7 +88,7 @@ try {
      Get-Process | Select-Object -First 10
 }
 finally {
-     Write-Host "Activity complete"
+     Write-Output "Activity complete"
 }
  #>
 
@@ -115,7 +115,7 @@ try {
      $intOutput 
 }
 catch [System.FormatException] {
-     Write-Host "Error: $_"
+     Write-Output "Error: $_"
 }
  #>
 
@@ -134,7 +134,7 @@ try {
      }
 }
 catch {
-     Write-Host "Error is negative: $_"
+     Write-Output "Error is negative: $_"
 }
  #>
 
@@ -152,18 +152,18 @@ $isFile = $false
 try {
      
      if (Get-Content "C:/test/file.txt" -ErrorAction SilentlyContinue) {
-          Write-Host "Found"
+          Write-Output "Found"
      } 
      else {
           for ($i = 1; $i -le 3; $i++) {
                Start-Sleep -Seconds 2
-               Write-Host "$i# - trying to read file"
+               Write-Output "$i# - trying to read file"
                Get-Content "C:/test/file.txt" -ErrorAction SilentlyContinue
           }
      }
 }
 catch {
-     Write-Host "Error: $_"
+     Write-Output "Error: $_"
 }
  #>
 
@@ -184,7 +184,7 @@ try {
           New-Item -ItemType File -Name "11_4_logs.txt" -Path "C:\Raporty\"
      }
      else {
-          Write-Host "11_4_logs.txt file has already exist"
+          Write-Output "11_4_logs.txt file has already exist"
      }
 
      for ($i = 0; $i -lt 5; $i++) {
@@ -215,13 +215,13 @@ try {
      Get-Process sadas -ErrorAction stop
 }
 catch {
-     Write-Host "|------------------------"
-     Write-Host "|Exception message: $($_.exception)"
-     Write-Host "|------------------------"
-     Write-Host "|CategoryInfo: $($_.CategoryInfo)"
-     Write-Host "|------------------------"
-     Write-Host "|InvocationInfo: $($_.InvocationInfo)"
-     Write-Host "|------------------------"
+     Write-Output "|------------------------"
+     Write-Output "|Exception message: $($_.exception)"
+     Write-Output "|------------------------"
+     Write-Output "|CategoryInfo: $($_.CategoryInfo)"
+     Write-Output "|------------------------"
+     Write-Output "|InvocationInfo: $($_.InvocationInfo)"
+     Write-Output "|------------------------"
 }
  #>
 
@@ -259,7 +259,7 @@ try {
 
 }
 catch [System.ArithmeticException] {
-     Write-Host "Error: $_"
+     Write-Output "Error: $_"
 }
  #>
 
@@ -276,13 +276,13 @@ $input = Read-Host "Provide number"
 
 try {
      switch ([int]$input) {
-          { $_ -is [int] } { Write-Host "Number as hell: $_" }
-          { $_ -isnot [int] } { Write-Host "$_ is not number!!!" }
+          { $_ -is [int] } { Write-Output "Number as hell: $_" }
+          { $_ -isnot [int] } { Write-Output "$_ is not number!!!" }
      } 
 }
 catch [System.Management.Automation.MethodInvocationException], [System.Management.Automation.CommandNotFoundException],
 [System.Management.Automation.RuntimeException] {
-     Write-Host "$_"
+     Write-Output "$_"
 }
 
 exit
@@ -308,13 +308,13 @@ try {
      
      switch ($student.Values.grades) {
           { $_ -isnot [int] } {
-               Write-Host "$_ is invalid data"
+               Write-Output "$_ is invalid data"
           }
-          Default { Write-Host "$_ is correct data" }
+          Default { Write-Output "$_ is correct data" }
      }
 }
 catch {
-     Write-Host "Error: $_"
+     Write-Output "Error: $_"
 }
  #>
 
@@ -330,12 +330,12 @@ try {
      $parseError = New-Object System.Management.Automation.ParseException
      $status = Get-Content -Path "C:\log.txt"
      switch -regex ($status) {
-          '^\[status\]\s+(active|inactive)$' { Write-Host "$_ --- sounds good" }
+          '^\[status\]\s+(active|inactive)$' { Write-Output "$_ --- sounds good" }
           Default { Write-Error "$_ - $parseError"; continue }
      }
 }
 catch [System.Web.ParserError] {
-     Write-Host "Error: $_"
+     Write-Output "Error: $_"
 }
 
 exit
@@ -377,18 +377,18 @@ function checkStockAvailability {
           switch ($product) {
                { $_ -match $stocks.name } {
                     if ([int]$stocks.Count -ge 1) {
-                         Write-Host "$_ count is: $($stocks.$product.count)"
+                         Write-Output "$_ count is: $($stocks.$product.count)"
                     }
                     else {
                          Throw "$_ is unavailable, count: $($stocks.$product.count)"
                     }
                }
-               Default { Write-Host "We don't offer provided product: $product" }
+               Default { Write-Output "We don't offer provided product: $product" }
           }
 
      }
      catch {
-          write-host "Error: $_"
+          Write-Output "Error: $_"
      }
 }
 

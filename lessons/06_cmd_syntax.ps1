@@ -27,7 +27,7 @@ foreach ($file in Get-ChildItem -Path "C:\Windows\Temp" |
  New-Item -Path "C:\" -ItemType Directory -Name RaportyLekcja6;
   Set-Content -Path "C:\RaportyLekcja6\procesy.txt" -Force -Value $highestCPU;
   $readFile = Get-Content -Path "C:\RaportyLekcja6\procesy.txt"
-  Write-Host "Największe zużycie CPU: $readfile"
+  Write-Output "Największe zużycie CPU: $readfile"
 
   #>
 
@@ -40,7 +40,7 @@ foreach ($file in Get-ChildItem -Path "C:\Windows\Temp" |
   $isExplorer = Get-Process -Name "explorer";
   
 
-  if ($isExplorer) {Stop-Process $isExplorer} else {Write-Host "Nie znaleziono procesu"}
+  if ($isExplorer) {Stop-Process $isExplorer} else {Write-Output "Nie znaleziono procesu"}
   #>
 
 #--------------------------------------------------------------------------------------
@@ -50,9 +50,9 @@ foreach ($file in Get-ChildItem -Path "C:\Windows\Temp" |
   
 <#
   Start-Process notepad.exe
-  Write-Host "Czekamy 3 sekundy"
+  Write-Output "Czekamy 3 sekundy"
   Start-Sleep -Seconds 3
-  Write-Host "Zamykamy notepad"
+  Write-Output "Zamykamy notepad"
   Stop-Process -Name notepad
   #>
 
@@ -68,7 +68,7 @@ foreach ($file in Get-ChildItem -Path "C:\Windows\Temp" |
   (Get-Content -Path "C:\TestLekcja6\$file") -like "*test*"
     ) 
   {Add-Content -Value "# Edytowano przez skrypt" -Path "C:\TestLekcja6\$file"; 
-  Write-Host "Dodane tekst do $file"; 
+  Write-Output "Dodane tekst do $file"; 
   Get-Content -Path "C:\TestLekcja6\$file"
     }
   }
@@ -124,7 +124,7 @@ foreach ($file in Get-ChildItem -Path "C:\Windows\Temp" |
 #foreach ($content in Get-ChildItem -Path "C:\LogiTest\" -ErrorAction SilentlyContinue -Filter *.txt) {
 #$filecontent = Get-Content -Path "C:\LogiTest\$content";
 #if ($filecontent -like "*blad krytyczny*") {
-#Write-Host "
+#Write-Output "
 #_________________________________
 #| Nazwa pliku: $($content.Name) 
 #|--------------------------------
@@ -153,7 +153,7 @@ foreach ($file in Get-ChildItem -Path "C:\Windows\Temp" |
 #
 #$isRunning = Get-Process -Name $procName -ErrorAction SilentlyContinue
 #
-#if ($isRunning)  {Stop-Process -ProcessName $procName -ErrorAction SilentlyContinue} else {Write-Host "$procName nie został znaleziony"}
+#if ($isRunning)  {Stop-Process -ProcessName $procName -ErrorAction SilentlyContinue} else {Write-Output "$procName nie został znaleziony"}
 #}
 #
 #KillIfRunning -procName explorer
@@ -169,7 +169,7 @@ foreach ($file in Get-ChildItem -Path "C:\Windows\Temp" |
 
 #$filesString = @("test1.txt","test2.txt","test3.txt","test4.txt","test5.txt")
 #
-#if (Test-Path -Path "C:\TempZadania") {Write-Host "folder istnieje"} else {New-Item -ItemType Directory -Name "TempZadania" -Path "C:\"}
+#if (Test-Path -Path "C:\TempZadania") {Write-Output "folder istnieje"} else {New-Item -ItemType Directory -Name "TempZadania" -Path "C:\"}
 #
 #For ($i = 0; $i -lt $filesString.Length; $i++){
 #Add-Content -Path C:\TempZadania\$($filesString[$i]) -Value "Zadanie wykonane" -Force
@@ -179,7 +179,7 @@ foreach ($file in Get-ChildItem -Path "C:\Windows\Temp" |
 #if ((Get-Content -Path "C:\TempZadania\$file") -join "`n" -like "*Zadanie*") {
 #Add-Content -Path C:\TempZadania\$file -Value "Potwierdzono";
 #$content = Get-Content -Path "C:\TempZadania\$file" -raw
-#Write-Host "Zawartość: $content"
+#Write-Output "Zawartość: $content"
 #  }
 #}
 

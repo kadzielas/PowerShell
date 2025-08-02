@@ -160,7 +160,7 @@ for ($i = 0; $i -lt $mixedarray.Length; $i++){
     } 
 }
 
-Write-Host "INT count: $countofINTS"
+Write-Output "INT count: $countofINTS"
 #>
 
 
@@ -175,7 +175,7 @@ Write-Host "INT count: $countofINTS"
 $arrayNumbers = @(12,43,65,21,2)
 [int]$totalx = 0;
 foreach ($x in $arrayNumbers) {
-Write-Host "$totalx before"
+Write-Output "$totalx before"
 $totalx += $x;
 }
 
@@ -233,7 +233,7 @@ for ($i = 0; $i -lt $filesToCreate.Length; $i++){
     $createdFilesCount++;
     }
 
-    Write-Host "Total count of created files: $createdFilesCount"
+    Write-Output "Total count of created files: $createdFilesCount"
 }
 
 createFile -filesToCreate $filesName
@@ -326,7 +326,7 @@ param(
 
     Write-Verbose "Result is ready to show..."
 
-    Write-Host "Processes that has been stopped and saved into array: $private:storedNames"
+    Write-Output "Processes that has been stopped and saved into array: $private:storedNames"
 
     }
 }

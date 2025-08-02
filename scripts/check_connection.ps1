@@ -17,7 +17,7 @@
 [int]$script:rawContentLength;
 
 
-function validURL {
+function Test-Connection-HTTPS {
     param(
         [uri]$output
     )
@@ -25,12 +25,13 @@ function validURL {
     do {
         try {
             if (-not $output) {
-            [uri]$output = Read-Host "Provide URL to check"
-            if ($output.Scheme -in @('https', 'http')) {
-                checkConnection -url $output -Verbose
-                $script:isValid = $true
+                [uri]$output = Read-Host "Provide URL to check"
+                if ($output.Scheme -in @('https', 'http')) {
+                    checkConnection -url $output -Verbose
+                    $script:isValid = $true
+                }
             }
-            } else {
+            else {
                 exit 1
             }
             
@@ -84,20 +85,20 @@ function checkConnection {
             
             if ($script:statusCode -eq 200) {
 
-                Write-Host "Connection to $url succeeded!"
+                Write-Output "Connection to $url succeeded!"
 
             }
             elseif ($script:statusCode -ge 300 -and $script:statusCode -lt 400) {
                 $isRedirecting = $true;
-                Write-Host "Connecting to $url succeeded!"
-                Write-Host "Connecting to $url is redirecting to another address"
+                Write-Output "Connecting to $url succeeded!"
+                Write-Output "Connecting to $url is redirecting to another address"
             }
             elseif ($script:statusCode -ge 500) {
-                Write-Host "Connection cannot be established due to server performance: $_"
+                Write-Output "Connection cannot be established due to server performance: $_"
             }
             else {
 
-                Write-Host "Connection $url cannot be established: $_"
+                Write-Output "Connection $url cannot be established: $_"
 
             }
             
@@ -115,23 +116,23 @@ function checkConnection {
             $script:clientHostname = hostname
             $script:statusCode = $script:statusCode
             #$script:traceRoute = ($script:tncResult | Select-Object -ExpandProperty traceroute)
-           # $script:hopsCount = ($script:tncResult.TraceRoute | Measure-Object).Count
+            # $script:hopsCount = ($script:tncResult.TraceRoute | Measure-Object).Count
             $script:rawContentLength = $script:curlResult.RawContentLength
             
 
             $script:connectionInfo = @{
-                Destination_URL      = $url
+                Destination_URL    = $url
                 #Destination_IP       = $script:destinationIp
                 #Destination_Hostname = $script:destinationHostname
-                Destination_Server   = $script:destinationServer
+                Destination_Server = $script:destinationServer
                 #Client_IP            = $script:clienIp
-                Client_Hostname      = $script:clientHostname
-                Status_Code          = $script:statusCode
+                Client_Hostname    = $script:clientHostname
+                Status_Code        = $script:statusCode
                 #Trace_Route          = $script:traceRoute -replace " ", " -> "
                 #Hops_Count           = $script:hopsCount
                 #DNS_Name_Resolved    = $script:dnsResolved
-                Redirecting          = $script:isRedirecting
-                Raw_Content_Length   = $script:rawContentLength
+                Redirecting        = $script:isRedirecting
+                Raw_Content_Length = $script:rawContentLength
                 
             } 
 
@@ -157,13 +158,10 @@ $($script:connectionInfo | Out-String)
 -----------------------------------------------------
 "@ | Out-File -FilePath "$script:path.txt" -Encoding UTF8
 
-    $script:connectionInfo | Export-Csv -Path "$script:path.csv" -Encoding UTF8
+        $script:connectionInfo | Export-Csv -Path "$script:path.csv" -Encoding UTF8
 
         Write-Verbose "Finished diagnosting connection: $url"
         
         exit
     }
 }
-
-
-validURL
