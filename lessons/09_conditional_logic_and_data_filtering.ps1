@@ -72,7 +72,7 @@ switch ($script:input) {
 
 #Excercise 9.4
 
-#Description: Create a switch block that handles both "start" and "stop" commands. For "start" show “Starting...”, for "stop" show “Stopping...”.
+#Description: Create a switch block that handles both "start" and "stop" commands. For "start" show "Starting...", for "stop" show "Stopping...".
 
 
 <#
