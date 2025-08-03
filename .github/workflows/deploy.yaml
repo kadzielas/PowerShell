@@ -74,10 +74,11 @@ jobs:
         - name: "Checkout repo"
           uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871
 
-        - name: "Check https://google.com connection status"
+        - name: "Check provided URL connection status"
           run: |
-           . ./scripts/check_connection.ps1
-            Test-Connection-HTTPS -url "https://google.com"
+           . ./scripts/check_connection.ps1 `
+            -Test-Connection-HTTPS ${{ github.event.inputs.URL }} `
+            -Verbose
           shell: pwsh
         
         - name: "Install PSScriptAnalyzer"
