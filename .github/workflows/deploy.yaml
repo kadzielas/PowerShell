@@ -41,14 +41,6 @@ jobs:
           Write-Host "Working dir: $PWD"
           Get-ChildItem -Recurse
 
-      - name: "Ensure UTF-8 without BOM"
-        run: |
-          Get-ChildItem -Recurse -Filter *.ps1 | ForEach-Object {
-          $content = Get-Content $_.FullName -Raw
-          Set-Content $_.FullName -Value $content -Encoding UTF8
-          }
-        shell: pwsh
-
       - name: "Install modules"
         run: |
           Set-PSRepository PSGallery -InstallationPolicy Trusted
@@ -59,11 +51,16 @@ jobs:
 
       - name: "Run Analyzer"
         run: |
-          $results = Invoke-ScriptAnalyzer -Path .
-          -Recurse -Severity Warning, Error
+          $results = (
+          Invoke-ScriptAnalyzer `
+          -Path . `
+          -Recurse `
+          -Severity Warning, Error
+          )
+
           if ($results.Count -gt 0) {
           $results | Format-Table
-          throw "::error::PSScriptAnalyzer found quality issue"
+          throw "::error::PSScriptAnalyzer found issue"
             }
         shell: pwsh
 
@@ -144,24 +141,4 @@ jobs:
           . ./scripts/check_connection.ps1 `
            -Test-Connection-HTTPS ${{ github.event.inputs.url }} `
            -Verbose
-        shell: pwsh
-
-      - name: "Install PSScriptAnalyzer"
-        run: |
-          Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
-        shell: pwsh
-
-      - name: "Run Analyzer"
-        run: |
-          $results = (
-          Invoke-ScriptAnalyzer `
-          -Path . `
-          -Recurse `
-          -Severity Warning, Error
-          )
-
-          if ($results.Count -gt 0) {
-          $results | Format-Table
-          throw "::error::PSScriptAnalyzer found issue"
-            }
         shell: pwsh
