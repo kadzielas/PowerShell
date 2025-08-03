@@ -26,6 +26,11 @@ jobs:
   general-check:
     name: "Scripts quality check"
     runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          [ubuntu-22.04, ubuntu-24.04, macos-latest, windows-2019, windows-2022]
 
     steps:
       - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871
@@ -44,8 +49,11 @@ jobs:
           }
         shell: pwsh
 
-      - name: "Install PSScriptAnalyzer"
+      - name: "Install modules"
         run: |
+          Set-PSRepository PSGallery -InstallationPolicy Trusted
+          Install-Module Assert -ErrorAction Stop -MaximumVersion 0.9.6 -Force
+          Install-Module Pester -ErrorAction Stop -MaximumVersion 5.6.1 -Force
           Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
         shell: pwsh
 
@@ -59,8 +67,10 @@ jobs:
             }
         shell: pwsh
 
-      - name: "Run Pester Tests"
+      - name: "Run Tests"
         run: |
+          Remove-Module Pester -ErrorAction SilentlyContinue
+          Import-Module pester -Version 5.6.1
           if (Test-Path "./tests") {
             Invoke-Pester -Path ./tests -Output Detailed
             } else {
