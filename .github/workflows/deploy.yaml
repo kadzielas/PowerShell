@@ -6,7 +6,11 @@ run-name: >
   on branch @${{ github.ref_name }}
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      url:
+        description: "URL to Tests"
+        required: true
   push:
     branches:
       - main
@@ -106,7 +110,6 @@ jobs:
   github-actions-workflows-validate:
     name: "Validate GH actions workflows"
     runs-on: ubuntu-latest
-    continue-on-error: true
     permissions:
       contents: read
       pull-requests: write
@@ -129,7 +132,7 @@ jobs:
       - name: "Check provided URL connection status"
         run: |
           . ./scripts/check_connection.ps1 `
-           -Test-Connection-HTTPS ${{ github.event.inputs.URL }} `
+           -Test-Connection-HTTPS ${{ github.event.inputs.url }} `
            -Verbose
         shell: pwsh
 
@@ -140,8 +143,11 @@ jobs:
 
       - name: "Run Analyzer"
         run: |
-          $results = `
-          (Invoke-ScriptAnalyzer -Path . -Recurse -Severity Warning, Error)
+          $results = Invoke-ScriptAnalyzer `
+          -Path . `
+          -Recurse `
+          -Severity Warning, Error
+
           if ($results.Count -gt 0) {
           $results | Format-Table
           throw "::error::PSScriptAnalyzer found issue"
