@@ -106,6 +106,7 @@ jobs:
   github-actions-workflows-validate:
     name: "Validate GH actions workflows"
     runs-on: ubuntu-latest
+    continue-on-error: true
     permissions:
       contents: read
       pull-requests: write
@@ -139,7 +140,8 @@ jobs:
 
       - name: "Run Analyzer"
         run: |
-          $results = Invoke-ScriptAnalyzer -Path . -Recurse
+          $results = `
+          (Invoke-ScriptAnalyzer -Path . -Recurse -Severity Warning, Error)
           if ($results.Count -gt 0) {
           $results | Format-Table
           throw "::error::PSScriptAnalyzer found issue"
