@@ -33,7 +33,7 @@ foreach ($file in Get-ChildItem -Path "C:\Windows\Temp" |
 
 #--------------------------------------------------------------------------------------
 #Excercise 6.3
-#Check if the explorer.exe process exists. If yes – terminate it using PowerShell. If not – output the message "Process not found."
+#Check if the explorer.exe process exists. If yes - terminate it using PowerShell. If not - output the message "Process not found."
 
 <#
 

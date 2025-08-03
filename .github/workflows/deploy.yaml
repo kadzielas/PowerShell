@@ -76,7 +76,7 @@ jobs:
 
         - name: "Check https://google.com connection status"
           run: |
-            ./scripts/check_connection.ps1
+           . ./scripts/check_connection.ps1
             Test-Connection-HTTPS -url "https://google.com"
           shell: pwsh
         

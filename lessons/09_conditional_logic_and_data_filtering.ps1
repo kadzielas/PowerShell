@@ -28,7 +28,7 @@ switch ($input) {
 
 #Excercise 9.2
 
-#Description: Ask the user to input a day of the week and use switch to print whether it’s a weekday or weekend.
+#Description: Ask the user to input a day of the week and use switch to print whether it's a weekday or weekend.
 
 
 <#
@@ -50,8 +50,7 @@ switch ($script:input) {
 
 #Excercise 9.3
 
-#Description: Use switch to check a number from 1 to 5 and print the number spelled out (e.g. 1 → One, 2 → Two).
-
+#Description: Use switch to check a number from 1 to 5 and print the number spelled out (e.g. 1 -> One, 2 -> Two).
 
 <#
 [int]$script:input = 0;
@@ -215,7 +214,7 @@ switch -Regex ($private:runningProcesses[$i]) {
 #Excercise 9.3
 
 #Description: Ask the user to input a two-letter country code (e.g., US, PL, DE, JP, FR). 
-#Use a switch block to return the country’s full name, official language, and typical time zone. 
+#Use a switch block to return the country's full name, official language, and typical time zone. 
 #Implement switch -Regex or switch -Wildcard to allow case-insensitive matching.
 
 
@@ -339,8 +338,8 @@ foreach ($check in $apps) {
 #Excercise 9.2
 
 #Description: Write a function that takes a hashtable with usernames and login timestamps. Use switch to classify activity:
-#If login time is between 6–9 AM, mark as "Early login"
-#9 – 17 as "Regular login"
+#If login time is between 6-9 AM, mark as "Early login"
+#9 - 17 as "Regular login"
 #After 17 as "After-hours login"
 #Return a report with username, login time, and login type.
 
@@ -453,10 +452,10 @@ Write-Output "Total % of errors: $([math]::Round(($errorCount / $total) * 100))%
 #Excercise 9.5
 
 #Description: Create a function that receives a list of IP addresses and classifies them using switch:
-#Starts with 192. → "Private"
-#Starts with 10. → "Private"
-#Starts with 172.16–172.31 → "Private"
-#Any other → "Public"
+#Starts with 192. - "Private"
+#Starts with 10. - "Private"
+#Starts with 172.16-172.31 - "Private"
+#Any other - "Public"
 #Return a grouped output with IP and classification.
 
 
