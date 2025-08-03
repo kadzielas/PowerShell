@@ -1,28 +1,31 @@
-name: 'PowerShell testing scripts'
+---
+name: "PowerShell testing scripts"
 
-run-name: Testing code pulled by @${{ github.actor }} on branch @${{ github.ref_name }}
-on: 
-  workflow_dispatch:
+run-name: >
+  Testing code pulled by @${{ github.actor }}
+  on branch @${{ github.ref_name }}
+
+on:
+  workflow_dispatch: {}
   push:
     branches:
-    - main
-    - test
+      - main
+      - test
   pull_request:
-    branches: 
-    - main
-    - test
+    branches:
+      - main
+      - test
     paths-ignore:
-      - '.github/'
-      - '!.dockerignore'
+      - ".github/"
+      - "!.dockerignore"
 
 jobs:
   general-check:
     name: "Scripts quality check"
     runs-on: windows-latest
-  
+
     steps:
-      - name: "Checkout repo"
-        uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871
+      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871
 
       - name: Debug folder structure
         shell: pwsh
@@ -39,18 +42,20 @@ jobs:
         shell: pwsh
 
       - name: "Install PSScriptAnalyzer"
-        run: Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
+        run: |
+          Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
         shell: pwsh
 
       - name: "Run Analyzer"
         run: |
-          $results = Invoke-ScriptAnalyzer -Path . -Recurse -Severity Warning,Error 
+          $results = Invoke-ScriptAnalyzer -Path .
+          -Recurse -Severity Warning, Error
           if ($results.Count -gt 0) {
-          $results | Format-Table 
+          $results | Format-Table
           throw "::error::PSScriptAnalyzer found quality issue"
             }
         shell: pwsh
-        
+
       - name: "Run Pester Tests"
         run: |
           if (Test-Path "./tests") {
@@ -62,34 +67,86 @@ jobs:
 
       - name: "Environment info"
         run: |
-          $PSVersionTable
+          [System.Environment]::OSVersion.Version
         shell: pwsh
 
+  readme-file-check:
+    name: "Check quality of README file"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871
+
+      - name: "Install markdownlint"
+        run: |
+          npm install -g markdownlint-cli
+
+      - name: "Lint README"
+        run: |
+          markdownlint README.md
+
+      - name: "Install cspell"
+        run: |
+          npm install -g cspell
+
+      - name: "Spell check README"
+        run: |
+          cspell "README.md"
+
+  deploy-config-check:
+    name: "Check quality of deploy.yaml file"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871
+
+      - name: "Install yamllint"
+        run: |
+          sudo apt-get install yamllint
+
+      - name: "Lint YAML files"
+        run: |
+          cd ./workflows
+          yamllint .
+
+  github-actions-workflows-validate:
+    name: "Validate GH actions workflows"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871
+
+      - name: "Validate workflows"
+        uses: devops-actions/actionlint@v1
 
   connection-check:
-      name: "Connection script check"
-      runs-on: windows-latest
+    name: "Connection script check"
+    runs-on: windows-latest
 
-      steps:
-        - name: "Checkout repo"
-          uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871
+    steps:
+      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871
 
-        - name: "Check provided URL connection status"
-          run: |
-           . ./scripts/check_connection.ps1 `
-            -Test-Connection-HTTPS ${{ github.event.inputs.URL }} `
-            -Verbose
-          shell: pwsh
-        
-        - name: "Install PSScriptAnalyzer"
-          run: Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
-          shell: pwsh
+      - name: "Check provided URL connection status"
+        run: |
+          . ./scripts/check_connection.ps1 `
+           -Test-Connection-HTTPS ${{ github.event.inputs.URL }} `
+           -Verbose
+        shell: pwsh
 
-        - name: "Run Analyzer"
-          run: |
-            $results = Invoke-ScriptAnalyzer -Path . -Recurse -Severity Warning,Error 
-            if ($results.Count -gt 0) {
-            $results | Format-Table 
-            throw "::error::PSScriptAnalyzer found issue"
-              }
-          shell: pwsh
+      - name: "Install PSScriptAnalyzer"
+        run: |
+          Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
+        shell: pwsh
+
+      - name: "Run Analyzer"
+        run: |
+          $results = Invoke-ScriptAnalyzer -Path .
+          -Recurse -Severity Warning, Error
+          if ($results.Count -gt 0) {
+          $results | Format-Table
+          throw "::error::PSScriptAnalyzer found issue"
+            }
+        shell: pwsh

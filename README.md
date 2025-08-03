@@ -2,7 +2,7 @@
 
 | Major | Minor | Build | Revision |
 |-------|-------|-------|----------|
-|   5   |   1   | 20348 |   2849   |
+|   7   |   5   |   7   |   200    |
 
 ---
 
@@ -19,7 +19,7 @@
 | ✅    | 7      | PowerShell Providers                        | Navigating environment, registry, aliases, and variables via providers.                       |
 | ✅    | 8      | Arrays and Variables                        | Working with arrays, hashtables, variable types, and scopes.                                  |
 | ✅    | 9      | Advanced Conditional Logic & Data Filtering | Complex conditions, switch blocks, and nested logical filtering.                              |
-| ❌    | 10     | Hashtables Advanced                         | Creating, accessing, nesting, and using hashtables in depth.                                  |
+| ✅    | 10     | Hashtables Advanced                         | Creating, accessing, nesting, and using hashtables in depth.                                  |
 | ❌    | 11     | Error Handling                              | Try/catch/finally blocks and handling different types of errors.                              |
 | ❌    | 12     | Scripting Basics                            | Writing reusable scripts, using parameters, and basic logic.                                  |
 | ❌    | 13     | Modules and Importing                       | Creating and using reusable PowerShell modules.                                               |
