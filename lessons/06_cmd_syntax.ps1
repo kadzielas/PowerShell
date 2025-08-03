@@ -1,4 +1,4 @@
-﻿#Excercise 6.1
+#Excercise 6.1
 #List all .log files in the C:\Windows\Temp directory that:
 #have more than 100 bytes
 #have been modified within the last 7 days
@@ -27,7 +27,7 @@ foreach ($file in Get-ChildItem -Path "C:\Windows\Temp" |
  New-Item -Path "C:\" -ItemType Directory -Name RaportyLekcja6;
   Set-Content -Path "C:\RaportyLekcja6\procesy.txt" -Force -Value $highestCPU;
   $readFile = Get-Content -Path "C:\RaportyLekcja6\procesy.txt"
-  Write-Output "Największe zużycie CPU: $readfile"
+  Write-Output "Highest consuming CPU: $readfile"
 
   #>
 
@@ -50,9 +50,9 @@ foreach ($file in Get-ChildItem -Path "C:\Windows\Temp" |
   
 <#
   Start-Process notepad.exe
-  Write-Output "Czekamy 3 sekundy"
+  Write-Output "Waiting 3 seconds"
   Start-Sleep -Seconds 3
-  Write-Output "Zamykamy notepad"
+  Write-Output "Closing notepad"
   Stop-Process -Name notepad
   #>
 
@@ -67,8 +67,8 @@ foreach ($file in Get-ChildItem -Path "C:\Windows\Temp" |
   if (
   (Get-Content -Path "C:\TestLekcja6\$file") -like "*test*"
     ) 
-  {Add-Content -Value "# Edytowano przez skrypt" -Path "C:\TestLekcja6\$file"; 
-  Write-Output "Dodane tekst do $file"; 
+  {Add-Content -Value "# Edited by script" -Path "C:\TestLekcja6\$file"; 
+  Write-Output "Added into: $file"; 
   Get-Content -Path "C:\TestLekcja6\$file"
     }
   }
@@ -116,19 +116,19 @@ foreach ($file in Get-ChildItem -Path "C:\Windows\Temp" |
 #for ($i = 0; $i -lt 10; $i++) {
 #New-Item -ItemType File -Path "C:\LogiTest\" -Name "$i-log.txt"
 #if ($i % 2 -eq 0) {
-#Set-Content -Path "C:\LogiTest\$i-log.txt" -Value "blad krytyczny"
+#Set-Content -Path "C:\LogiTest\$i-log.txt" -Value "critical error"
 #  } else {
-#Set-Content -Path "C:\LogiTest\$i-log.txt" -Value "wszystko OK"
+#Set-Content -Path "C:\LogiTest\$i-log.txt" -Value "all OK"
 #  }
 #}
 #foreach ($content in Get-ChildItem -Path "C:\LogiTest\" -ErrorAction SilentlyContinue -Filter *.txt) {
 #$filecontent = Get-Content -Path "C:\LogiTest\$content";
-#if ($filecontent -like "*blad krytyczny*") {
+#if ($filecontent -like "*critical error*") {
 #Write-Output "
 #_________________________________
-#| Nazwa pliku: $($content.Name) 
+#| File name: $($content.Name) 
 #|--------------------------------
-#| Zawartość: $filecontent       
+#| Content: $filecontent       
 #---------------------------------
 #"     
 #
@@ -153,7 +153,7 @@ foreach ($file in Get-ChildItem -Path "C:\Windows\Temp" |
 #
 #$isRunning = Get-Process -Name $procName -ErrorAction SilentlyContinue
 #
-#if ($isRunning)  {Stop-Process -ProcessName $procName -ErrorAction SilentlyContinue} else {Write-Output "$procName nie został znaleziony"}
+#if ($isRunning)  {Stop-Process -ProcessName $procName -ErrorAction SilentlyContinue} else {Write-Output "$procName can't be found"}
 #}
 #
 #KillIfRunning -procName explorer
@@ -179,7 +179,7 @@ foreach ($file in Get-ChildItem -Path "C:\Windows\Temp" |
 #if ((Get-Content -Path "C:\TempZadania\$file") -join "`n" -like "*Zadanie*") {
 #Add-Content -Path C:\TempZadania\$file -Value "Potwierdzono";
 #$content = Get-Content -Path "C:\TempZadania\$file" -raw
-#Write-Output "Zawartość: $content"
+#Write-Output "Content: $content"
 #  }
 #}
 

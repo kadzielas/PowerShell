@@ -1,4 +1,4 @@
-﻿
+
      
 #providers
 
@@ -33,7 +33,7 @@
 #!------------------------------------------------------------!
 #Excercise 7.4
 
-#Description: Add a new PowerShell variable named mojaZmienna with the value "Testuję providery" and display it.
+#Description: Add a new PowerShell variable named mojaZmienna with the value "Testuje providery" and display it.
 
 <#
 [string]$mojaZmienna = "Testuje providery"
@@ -43,11 +43,11 @@ $mojaZmienna
 #!------------------------------------------------------------!
 #Excercise 7.5
 
-#Description: Add an alias powitaj that calls Write-Output. Use it to print the text "Działa!".
+#Description: Add an alias powitaj that calls Write-Output. Use it to print the text "Dziala!".
 
 #Set-Alias -Name powitaj -Value Write-Output
 #
-#powitaj działa!
+#powitaj dziala!
 
 
 #!------------------------------------------------------------!
@@ -87,11 +87,11 @@ $mojaZmienna
 #!------------------------------------------------------------!
 #Excercise 7.9
 
-#Description: Create your own function PokażInfo that prints the text: "Dzień dobry z lekcji 7". Then add the alias info for it.
+#Description: Create your own function PokazInfo that prints the text: "Dzien dobry z lekcji 7". Then add the alias info for it.
 
 
 #function PokazInfo {
-#    Write-Output Dzień dobry z lekcji 7.
+#    Write-Output Dzien dobry z lekcji 7.
 #}
 #
 #Set-Alias -Name info -Value PokazInfo

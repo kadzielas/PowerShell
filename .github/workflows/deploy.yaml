@@ -47,7 +47,7 @@ jobs:
           $results = Invoke-ScriptAnalyzer -Path . -Recurse -Severity Warning,Error 
           if ($results.Count -gt 0) {
           $results | Format-Table 
-          throw "::error::PSScriptAnalyzer found issue"
+          throw "::error::PSScriptAnalyzer found quality issue"
             }
         shell: pwsh
         
@@ -77,7 +77,7 @@ jobs:
         - name: "Check https://google.com connection status"
           run: |
             ./scripts/check_connection.ps1
-            Test-Connection-HTTPS -output "https://google.com"
+            Test-Connection-HTTPS -url "https://google.com"
           shell: pwsh
         
         - name: "Install PSScriptAnalyzer"

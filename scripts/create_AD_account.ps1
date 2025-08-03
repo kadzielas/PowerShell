@@ -58,7 +58,7 @@ function New-User-Account {
         Unlock-ADAccount -Identity $SamAccountName -ErrorAction Stop
         Set-ADUser -Identity $SamAccountName -DisplayName $Surname", "$GivenName -ErrorAction Stop
         Set-ADccountPassword -Identity $SamAccountName -NewPassword $GeneratedPassword -ErrorAction Stop
-        Invoke-Command -ComputerName $env:COMPUTERNAME -ScriptBlock { Start-ADSyncSyncCycle -PolicyType Delta } -ErrorAction Stop
+        Invoke-Command -ComputerName $DeviceName -ScriptBlock { Start-ADSyncSyncCycle -PolicyType Delta } -ErrorAction Stop
         Start-Sleep -s 120
     }
     catch {

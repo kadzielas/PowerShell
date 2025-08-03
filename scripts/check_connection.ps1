@@ -18,35 +18,6 @@
 
 
 function Test-Connection-HTTPS {
-    param(
-        [uri]$output
-    )
-    [bool]$script:isValid = $false
-    do {
-        try {
-            if (-not $output) {
-                [uri]$output = Read-Host "Provide URL to check"
-                if ($output.Scheme -in @('https', 'http')) {
-                    checkConnection -url $output -Verbose
-                    $script:isValid = $true
-                }
-            }
-            else {
-                exit 1
-            }
-            
-            else {
-                Write-Error "Provided URL is invalid, please try again"
-            }
-        }
-        catch {
-            Write-Error "Provided URL is wrong: $_"
-        }
-
-    } while ($script:isValid)
-}
-
-function checkConnection {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
@@ -54,6 +25,19 @@ function checkConnection {
     )
 
     begin {
+
+        Write-Verbose "Validating provided URL - $url"
+        if (-not $url) {
+            [uri]$url = Read-Host "Provide URL to check"
+            if ($url.Scheme -in @('https', 'http')) {
+                Write-Output "URL is correct: $url"
+            }
+        }
+        else {
+            Write-Error "Provided URL [$url] is invalid, please try again"
+            exit 1
+        }
+
         Write-Verbose "Establishing connection..."
         [string]$urlWithoutPrefixProtocol = $url -replace '^https://', '' -replace '/$', ''
         [string]$title = ((Get-Date -format yy-mm-dd-mm-ss) + "-" + $urlWithoutPrefixProtocol -replace '\.', "-")
@@ -108,7 +92,7 @@ function checkConnection {
         }
 
         try {
-            #arp -a (szuka hostów w lokalnej sieci)
+            #arp -a (looking for hosts inside local network)
             #$script:destinationIp = $script:tncResult.RemoteAddress
             #$script:destinationHostname = ([System.Net.Dns]::GetHostEntry($script:destinationIp).HostName)
             $script:destinationServer = $script:webRequestResult.GetResponse().server
