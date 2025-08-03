@@ -16,7 +16,6 @@ on:
       - main
       - test
     paths-ignore:
-      - ".github/"
       - "!.dockerignore"
 
 jobs:
@@ -116,6 +115,8 @@ jobs:
 
       - name: "Validate workflows"
         uses: raven-actions/actionlint@v1
+        with:
+          path: ".github/workflows/"
 
   connection-check:
     name: "Connection script check"
@@ -138,9 +139,7 @@ jobs:
 
       - name: "Run Analyzer"
         run: |
-          $results = Invoke-ScriptAnalyzer -Path . `
-          -Recurse `
-          -Severity Warning, Error
+          $results = Invoke-ScriptAnalyzer -Path . -Recurse
           if ($results.Count -gt 0) {
           $results | Format-Table
           throw "::error::PSScriptAnalyzer found issue"
