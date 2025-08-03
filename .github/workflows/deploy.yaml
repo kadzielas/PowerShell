@@ -1,28 +1,39 @@
-name: 'PowerShell testing scripts'
+---
+name: "PowerShell testing scripts"
 
-run-name: Testing code pulled by @${{ github.actor }} on branch @${{ github.ref_name }}
-on: 
+run-name: >
+  Testing code pulled by @${{ github.actor }}
+  on branch @${{ github.ref_name }}
+
+on:
   workflow_dispatch:
+    inputs:
+      url:
+        description: "URL to Tests"
+        required: true
   push:
     branches:
-    - main
-    - test
+      - main
+      - test
   pull_request:
-    branches: 
-    - main
-    - test
+    branches:
+      - main
+      - test
     paths-ignore:
-      - '.github/'
-      - '!.dockerignore'
+      - "!.dockerignore"
 
 jobs:
   general-check:
     name: "Scripts quality check"
     runs-on: windows-latest
-  
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          [ubuntu-22.04, ubuntu-24.04, macos-latest, windows-2019, windows-2022]
+
     steps:
-      - name: "Checkout repo"
-        uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871
+      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871
 
       - name: Debug folder structure
         shell: pwsh
@@ -30,29 +41,33 @@ jobs:
           Write-Host "Working dir: $PWD"
           Get-ChildItem -Recurse
 
-      - name: "Ensure UTF-8 without BOM"
+      - name: "Install modules"
         run: |
-          Get-ChildItem -Recurse -Filter *.ps1 | ForEach-Object {
-          $content = Get-Content $_.FullName -Raw
-          Set-Content $_.FullName -Value $content -Encoding UTF8
-          }
-        shell: pwsh
-
-      - name: "Install PSScriptAnalyzer"
-        run: Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
+          Set-PSRepository PSGallery -InstallationPolicy Trusted
+          Install-Module Assert -ErrorAction Stop -MaximumVersion 0.9.6 -Force
+          Install-Module Pester -ErrorAction Stop -MaximumVersion 5.6.1 -Force
+          Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
         shell: pwsh
 
       - name: "Run Analyzer"
         run: |
-          $results = Invoke-ScriptAnalyzer -Path . -Recurse -Severity Warning,Error 
+          $results = (
+          Invoke-ScriptAnalyzer `
+          -Path . `
+          -Recurse `
+          -Severity Warning, Error
+          )
+
           if ($results.Count -gt 0) {
-          $results | Format-Table 
-          throw "::error::PSScriptAnalyzer found quality issue"
+          $results | Format-Table
+          throw "::error::PSScriptAnalyzer found issue"
             }
         shell: pwsh
-        
-      - name: "Run Pester Tests"
+
+      - name: "Run Tests"
         run: |
+          Remove-Module Pester -ErrorAction SilentlyContinue
+          Import-Module pester -Version 5.6.1
           if (Test-Path "./tests") {
             Invoke-Pester -Path ./tests -Output Detailed
             } else {
@@ -62,34 +77,68 @@ jobs:
 
       - name: "Environment info"
         run: |
-          $PSVersionTable
+          [System.Environment]::OSVersion.Version
         shell: pwsh
 
+  readme-file-check:
+    name: "Check quality of README file"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871
+
+      - name: "Install markdownlint"
+        run: |
+          npm install -g markdownlint-cli
+
+      - name: "Install cspell"
+        run: |
+          npm install -g cspell
+
+      - name: "Spell check README"
+        run: |
+          cspell "README.md"
+
+  deploy-config-check:
+    name: "Check quality of deploy.yaml file"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871
+
+      - name: "Install yamllint"
+        run: |
+          sudo apt-get install yamllint
+
+      - name: "Lint YAML files"
+        run: |
+          yamllint .
+
+  github-actions-workflows-validate:
+    name: "Validate GH actions workflows"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871
+
+      - name: "Validate workflows"
+        uses: raven-actions/actionlint@v1
+        with:
+          path: ".github/workflows/"
 
   connection-check:
-      name: "Connection script check"
-      runs-on: windows-latest
+    name: "Connection script check"
+    runs-on: windows-latest
 
-      steps:
-        - name: "Checkout repo"
-          uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871
+    steps:
+      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871
 
-        - name: "Check provided URL connection status"
-          run: |
-           . ./scripts/check_connection.ps1 `
-            -Test-Connection-HTTPS ${{ github.event.inputs.URL }} `
-            -Verbose
-          shell: pwsh
-        
-        - name: "Install PSScriptAnalyzer"
-          run: Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
-          shell: pwsh
-
-        - name: "Run Analyzer"
-          run: |
-            $results = Invoke-ScriptAnalyzer -Path . -Recurse -Severity Warning,Error 
-            if ($results.Count -gt 0) {
-            $results | Format-Table 
-            throw "::error::PSScriptAnalyzer found issue"
-              }
-          shell: pwsh
+      - name: "Check provided URL connection status"
+        run: |
+          . ./scripts/check_connection.ps1 `
+           -Test-Connection-HTTPS ${{ github.event.inputs.url }} `
+           -Verbose
+        shell: pwsh
