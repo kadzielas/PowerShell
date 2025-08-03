@@ -1,4 +1,4 @@
-﻿
+
      
 #providers
 
@@ -33,7 +33,7 @@
 #!------------------------------------------------------------!
 #Excercise 7.4
 
-#Description: Add a new PowerShell variable named mojaZmienna with the value "Testuję providery" and display it.
+#Description: Add a new PowerShell variable named mojaZmienna with the value "Testuje providery" and display it.
 
 <#
 [string]$mojaZmienna = "Testuje providery"
@@ -43,11 +43,11 @@ $mojaZmienna
 #!------------------------------------------------------------!
 #Excercise 7.5
 
-#Description: Add an alias powitaj that calls Write-Host. Use it to print the text "Działa!".
+#Description: Add an alias powitaj that calls Write-Output. Use it to print the text "Dziala!".
 
-#Set-Alias -Name powitaj -Value Write-host
+#Set-Alias -Name powitaj -Value Write-Output
 #
-#powitaj działa!
+#powitaj dziala!
 
 
 #!------------------------------------------------------------!
@@ -87,11 +87,11 @@ $mojaZmienna
 #!------------------------------------------------------------!
 #Excercise 7.9
 
-#Description: Create your own function PokażInfo that prints the text: "Dzień dobry z lekcji 7". Then add the alias info for it.
+#Description: Create your own function PokazInfo that prints the text: "Dzien dobry z lekcji 7". Then add the alias info for it.
 
 
 #function PokazInfo {
-#    Write-Host Dzień dobry z lekcji 7.
+#    Write-Output Dzien dobry z lekcji 7.
 #}
 #
 #Set-Alias -Name info -Value PokazInfo
@@ -145,7 +145,7 @@ Get-ChildItem alias:S* | ForEach-Object{
 
     $selectedAliastCount = $selectedAliasName.Length;
 
-    Write-Host "Total count: $selectedAliastCount"
+    Write-Output "Total count: $selectedAliastCount"
     #>
 
 
@@ -182,7 +182,7 @@ $value = $allvariables[$var]
 <#
 foreach ($regkeyselected in Get-ChildItem HKCU:\Software -Recurse | 
 Where-Object {($_.Name).Length -gt 100}) {
-Write-Host @"
+Write-Output @"
 
 Registry key name: $($regkeyselected.Name)
 Registry length: $(($regkeyselected.Name).Length)
@@ -203,14 +203,14 @@ if (-not (Test-Path "C:\ProviderReport")) {
 New-Item -ItemType Directory -Path C:\ -Name ProviderReport 
 New-Item -ItemType File -Path C:\ProviderReport\ -Name every_alias.txt
 } else {
-Write-Host "Directory has already exist"
+Write-Output "Directory has already exist"
 }
 
 if (Test-Path C:\ProviderReport\every_alias.txt) {
 Set-Content -Path C:\ProviderReport\every_alias.txt -Value $aliasO
 notepad.exe C:\ProviderReport\every_alias.txt
 } else {
-Write-Host "File doesn't exist"
+Write-Output "File doesn't exist"
 }
 #>
 

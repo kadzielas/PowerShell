@@ -1,4 +1,4 @@
-﻿
+
      
 #conditional_logic_and_data_filtering
 
@@ -16,9 +16,9 @@ $input = Read-Host "Provide color"
 
 switch ($input) {
     
-    "red" {Write-Host "Selected color: red"}
-    "blue" {Write-Host "Selected color: blue"}
-    "green" {Write-Host "Selected color: green"}
+    "red" {Write-Output "Selected color: red"}
+    "blue" {Write-Output "Selected color: blue"}
+    "green" {Write-Output "Selected color: green"}
 
 }
 #>
@@ -28,7 +28,7 @@ switch ($input) {
 
 #Excercise 9.2
 
-#Description: Ask the user to input a day of the week and use switch to print whether it’s a weekday or weekend.
+#Description: Ask the user to input a day of the week and use switch to print whether it's a weekday or weekend.
 
 
 <#
@@ -39,9 +39,9 @@ $script:input = Read-Host "Provide name of day";
 
 switch ($script:input) {
 
-    $script:weekend[0] {Write-Host "$script:input - it's weekend!"}
-    $script:weekend[1] {Write-Host "$script:input - it's weekend!"}
-    default {Write-Host "$script:input - it's weekday!"}
+    $script:weekend[0] {Write-Output "$script:input - it's weekend!"}
+    $script:weekend[1] {Write-Output "$script:input - it's weekend!"}
+    default {Write-Output "$script:input - it's weekday!"}
 }
 #>
 
@@ -50,8 +50,7 @@ switch ($script:input) {
 
 #Excercise 9.3
 
-#Description: Use switch to check a number from 1 to 5 and print the number spelled out (e.g. 1 → One, 2 → Two).
-
+#Description: Use switch to check a number from 1 to 5 and print the number spelled out (e.g. 1 -> One, 2 -> Two).
 
 <#
 [int]$script:input = 0;
@@ -59,12 +58,12 @@ switch ($script:input) {
 $script:input = Read-Host "Provide number"
 switch ($script:input) {
     
-    1 {Write-Host One}
-    2 {Write-Host Two}
-    3 {Write-Host Three}
-    4 {Write-Host Four}
-    5 {Write-Host Five}
-    Default {Write-Host "out of scope"}
+    1 {Write-Output One}
+    2 {Write-Output Two}
+    3 {Write-Output Three}
+    4 {Write-Output Four}
+    5 {Write-Output Five}
+    Default {Write-Output "out of scope"}
 }
 #>
 
@@ -73,7 +72,7 @@ switch ($script:input) {
 
 #Excercise 9.4
 
-#Description: Create a switch block that handles both "start" and "stop" commands. For "start" show “Starting...”, for "stop" show “Stopping...”.
+#Description: Create a switch block that handles both "start" and "stop" commands. For "start" show "Starting...", for "stop" show "Stopping...".
 
 
 <#
@@ -92,15 +91,15 @@ try {
     $script:inputValidate = [status]::Parse([status], $script:input, $true)  
 }
 catch {
-    Write-Host "Invalid input. Please enter one of the following: start, stop"
+    Write-Output "Invalid input. Please enter one of the following: start, stop"
 }
 
 switch ($script:inputValidate) {
     
-    start {Write-Host Starting...}
-    stop {Write-Host Stopping...}
+    start {Write-Output Starting...}
+    stop {Write-Output Stopping...}
     
-    Default {Write-Host "out of scope"}
+    Default {Write-Output "out of scope"}
 }
 #>
 
@@ -120,12 +119,12 @@ if (-not $script:input.StartsWith(".")) {
 }
 
 switch ($script:input) {
-    { $_ -eq ".txt" } { Write-Host "It's a TXT file extension!" ; break }
-    { $_ -eq ".jpg" } { Write-Host "It's a JPG file extension!" ; break }
-    { $_ -eq ".exe" } { Write-Host "It's an EXE file extension!" ; break }
-    { $_ -eq ".log" } { Write-Host "It's a LOG file extension!" ; break }
-    { $_ -eq ".gif" } { Write-Host "It's a GIF file extension!" ; break }
-    default { Write-Host "Provided extension is not included in the list." }
+    { $_ -eq ".txt" } { Write-Output "It's a TXT file extension!" ; break }
+    { $_ -eq ".jpg" } { Write-Output "It's a JPG file extension!" ; break }
+    { $_ -eq ".exe" } { Write-Output "It's an EXE file extension!" ; break }
+    { $_ -eq ".log" } { Write-Output "It's a LOG file extension!" ; break }
+    { $_ -eq ".gif" } { Write-Output "It's a GIF file extension!" ; break }
+    default { Write-Output "Provided extension is not included in the list." }
 }
 #>
 
@@ -156,9 +155,9 @@ $script:selectedFilePath = [System.IO.Path]::GetExtension($script:selectedFilePa
 
 switch -Regex ($script:selectedFilePath) {
 
-    "\.(txt|exe|log|zip|bat|ps1)$" {Write-Host "The file extension is $script:selectedFilePath"}
+    "\.(txt|exe|log|zip|bat|ps1)$" {Write-Output "The file extension is $script:selectedFilePath"}
     
-    default {Write-Host "Out of scope"}
+    default {Write-Output "Out of scope"}
 
 }
 
@@ -200,7 +199,7 @@ switch -Regex ($private:runningProcesses[$i]) {
     }
     
   if (Get-Process | Where-Object {$_.Name -match $private:runningProcesses[$i] -and $_.PM -gt 100MB}) {
-  Write-Host "$($private:runningProcesses[$i]) process is consuming above 100MB of RAM"
+  Write-Output "$($private:runningProcesses[$i]) process is consuming above 100MB of RAM"
   }
 
 }
@@ -215,7 +214,7 @@ switch -Regex ($private:runningProcesses[$i]) {
 #Excercise 9.3
 
 #Description: Ask the user to input a two-letter country code (e.g., US, PL, DE, JP, FR). 
-#Use a switch block to return the country’s full name, official language, and typical time zone. 
+#Use a switch block to return the country's full name, official language, and typical time zone. 
 #Implement switch -Regex or switch -Wildcard to allow case-insensitive matching.
 
 
@@ -225,8 +224,8 @@ $script:output = Read-Host "Provide two-letter country code"
 
 switch -Wildcard ($script:output) {
 
-    "PL" {Write-Host "Poland, polish, CET+1"}
-    default {Write-Host "Provided country code is not included."}
+    "PL" {Write-Output "Poland, polish, CET+1"}
+    default {Write-Output "Provided country code is not included."}
 
 }
 #>
@@ -256,10 +255,10 @@ function checkName {
     foreach ($check in $usernames) {
         
         switch -Regex ($check) {
-            'admin' { Write-Host "$check Privileged" }
-            '01' { Write-Host "$check Temporary account" }
-            "^[A-Z]+$" { Write-Host "$check Custom" }
-            Default { Write-Host "$check Standard" }
+            'admin' { Write-Output "$check Privileged" }
+            '01' { Write-Output "$check Temporary account" }
+            "^[A-Z]+$" { Write-Output "$check Custom" }
+            Default { Write-Output "$check Standard" }
         }
     }
 }
@@ -291,10 +290,10 @@ function checkCommand {
     )
 
     switch -Regex ($providedCommand) {
-        '^Get-Item' { Write-Host "$providedCommand is Filesystem-related command" }
-        '^Get-(service|process)' { Write-Host "$providedCommand is System-related command" }
-        '(new-|set-)' { Write-Host "$providedCommand is Configuration command" }
-        Default { Write-Host "Unrecognized or advanced command" }
+        '^Get-Item' { Write-Output "$providedCommand is Filesystem-related command" }
+        '^Get-(service|process)' { Write-Output "$providedCommand is System-related command" }
+        '(new-|set-)' { Write-Output "$providedCommand is Configuration command" }
+        Default { Write-Output "Unrecognized or advanced command" }
     }
     
 }
@@ -325,10 +324,10 @@ $apps = Get-AppPackage | Select-Object name
 foreach ($check in $apps) {
 
     switch -regex ($check) {
-        "(security|windows)" { Write-Host "$check is recognized as security tool" }
-        "system" { Write-Host "$check is recognized as system tool" }
-        "browser" { Write-Host "$check is recognized as browser" }
-        Default { Write-Host "$check is recognized as miscellaneous" }
+        "(security|windows)" { Write-Output "$check is recognized as security tool" }
+        "system" { Write-Output "$check is recognized as system tool" }
+        "browser" { Write-Output "$check is recognized as browser" }
+        Default { Write-Output "$check is recognized as miscellaneous" }
     }
 
 }
@@ -339,8 +338,8 @@ foreach ($check in $apps) {
 #Excercise 9.2
 
 #Description: Write a function that takes a hashtable with usernames and login timestamps. Use switch to classify activity:
-#If login time is between 6–9 AM, mark as "Early login"
-#9 – 17 as "Regular login"
+#If login time is between 6-9 AM, mark as "Early login"
+#9 - 17 as "Regular login"
 #After 17 as "After-hours login"
 #Return a report with username, login time, and login type.
 
@@ -363,10 +362,10 @@ $userInfo
 foreach ($selected in $userInfo.Values) {
     $hour = [int]$selected.LoginTime.toString("HH");
     switch ($hour) {
-        { $_ -GE 6 -and $_ -LT 9 } { Write-Host "$($selected.Name):Early login" }
-        { $_ -GE 9 -and $_ -LT 17 } { Write-Host "$($selected.Name):Regular login" }
-        { $_ -GE 17 -and $_ -LT 23 } { Write-Host "$($selected.Name):After-hours login" }
-        { $_ -GE 0 -and $_ -LT 6 } { Write-Host "$($selected.Name):After-hours login" }
+        { $_ -GE 6 -and $_ -LT 9 } { Write-Output "$($selected.Name):Early login" }
+        { $_ -GE 9 -and $_ -LT 17 } { Write-Output "$($selected.Name):Regular login" }
+        { $_ -GE 17 -and $_ -LT 23 } { Write-Output "$($selected.Name):After-hours login" }
+        { $_ -GE 0 -and $_ -LT 6 } { Write-Output "$($selected.Name):After-hours login" }
     }
 
 }
@@ -397,8 +396,8 @@ if (Test-Path $Private:selectedPath) {
 
         switch -regex ($private:files[$i]) {
 
-            "$($private:extensions[0])$" { Write-Host "Name: $(Split-Path $private:files[$i].Directory) `n Type: Other `n Size: $([System.Math]::Round(($private:files[$i].Length / 1KB), 2)) KB" }
-            "$($private:extensions[1])$" { Write-Host "Name: $(Split-Path $private:files[$i].Directory) `n Type: Executable `n Size: $([System.Math]::Round(($private:files[$i].Length / 1KB), 2)) KB `n -------------" }
+            "$($private:extensions[0])$" { Write-Output "Name: $(Split-Path $private:files[$i].Directory) `n Type: Other `n Size: $([System.Math]::Round(($private:files[$i].Length / 1KB), 2)) KB" }
+            "$($private:extensions[1])$" { Write-Output "Name: $(Split-Path $private:files[$i].Directory) `n Type: Executable `n Size: $([System.Math]::Round(($private:files[$i].Length / 1KB), 2)) KB `n -------------" }
             
         
         }
@@ -438,13 +437,13 @@ foreach ($line in $content) {
 
 $total = $content.Count
 
-Write-Host ""
-Write-Host "Final line count:"
-Write-Host "Error: $errorCount"
-Write-Host "Warning: $warningCount"
-Write-Host "Empty: $emptyCount"
-Write-Host ""
-Write-Host "Total % of errors: $([math]::Round(($errorCount / $total) * 100))%"
+Write-Output ""
+Write-Output "Final line count:"
+Write-Output "Error: $errorCount"
+Write-Output "Warning: $warningCount"
+Write-Output "Empty: $emptyCount"
+Write-Output ""
+Write-Output "Total % of errors: $([math]::Round(($errorCount / $total) * 100))%"
  #>
  
 
@@ -453,10 +452,10 @@ Write-Host "Total % of errors: $([math]::Round(($errorCount / $total) * 100))%"
 #Excercise 9.5
 
 #Description: Create a function that receives a list of IP addresses and classifies them using switch:
-#Starts with 192. → "Private"
-#Starts with 10. → "Private"
-#Starts with 172.16–172.31 → "Private"
-#Any other → "Public"
+#Starts with 192. - "Private"
+#Starts with 10. - "Private"
+#Starts with 172.16-172.31 - "Private"
+#Any other - "Public"
 #Return a grouped output with IP and classification.
 
 

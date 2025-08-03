@@ -1,27 +1,95 @@
 name: 'PowerShell testing scripts'
 
-run-name: Testing code to ${{ inputs.deploy_target }} pulled by @${{ github.actor }}
+run-name: Testing code pulled by @${{ github.actor }} on branch @${{ github.ref_name }}
 on: 
   workflow_dispatch:
   push:
     branches:
     - main
-    - dev
+    - test
+  pull_request:
+    branches: 
+    - main
+    - test
     paths-ignore:
       - '.github/'
       - '!.dockerignore'
 
 jobs:
-  test:
-    name: "Run first test"
+  general-check:
+    name: "Scripts quality check"
     runs-on: windows-latest
   
     steps:
       - name: "Checkout repo"
-        uses: actions/checkout@4
+        uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871
 
-      - name: "Display current directory"
-        run: Get-Location
+      - name: Debug folder structure
+        shell: pwsh
+        run: |
+          Write-Host "Working dir: $PWD"
+          Get-ChildItem -Recurse
+
+      - name: "Ensure UTF-8 without BOM"
+        run: |
+          Get-ChildItem -Recurse -Filter *.ps1 | ForEach-Object {
+          $content = Get-Content $_.FullName -Raw
+          Set-Content $_.FullName -Value $content -Encoding UTF8
+          }
+        shell: pwsh
+
+      - name: "Install PSScriptAnalyzer"
+        run: Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
+        shell: pwsh
+
+      - name: "Run Analyzer"
+        run: |
+          $results = Invoke-ScriptAnalyzer -Path . -Recurse -Severity Warning,Error 
+          if ($results.Count -gt 0) {
+          $results | Format-Table 
+          throw "::error::PSScriptAnalyzer found quality issue"
+            }
+        shell: pwsh
+        
+      - name: "Run Pester Tests"
+        run: |
+          if (Test-Path "./tests") {
+            Invoke-Pester -Path ./tests -Output Detailed
+            } else {
+              Write-Host "No test folder found, skipping"
+              }
+        shell: pwsh
+
+      - name: "Environment info"
+        run: |
+          $PSVersionTable
         shell: pwsh
 
 
+  connection-check:
+      name: "Connection script check"
+      runs-on: windows-latest
+
+      steps:
+        - name: "Checkout repo"
+          uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871
+
+        - name: "Check provided URL connection status"
+          run: |
+           . ./scripts/check_connection.ps1 `
+            -Test-Connection-HTTPS ${{ github.event.inputs.URL }} `
+            -Verbose
+          shell: pwsh
+        
+        - name: "Install PSScriptAnalyzer"
+          run: Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
+          shell: pwsh
+
+        - name: "Run Analyzer"
+          run: |
+            $results = Invoke-ScriptAnalyzer -Path . -Recurse -Severity Warning,Error 
+            if ($results.Count -gt 0) {
+            $results | Format-Table 
+            throw "::error::PSScriptAnalyzer found issue"
+              }
+          shell: pwsh

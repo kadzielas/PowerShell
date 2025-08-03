@@ -17,28 +17,7 @@
 [int]$script:rawContentLength;
 
 
-function validURL {
-    [bool]$script:isValid = $false
-    do {
-        try {
-            [uri]$output = Read-Host "Provide URL to check"
-
-            if ($output.Scheme -in @('https', 'http')) {
-                checkConnection -url $output -Verbose
-                $script:isValid = $true
-            }
-            else {
-                Write-Error "Provided URL is invalid, please try again"
-            }
-        }
-        catch {
-            Write-Error "Something went wrong: $_"
-        }
-
-    } while ($script:isValid)
-}
-
-function checkConnection {
+function Test-Connection-HTTPS {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
@@ -46,9 +25,23 @@ function checkConnection {
     )
 
     begin {
+
+        Write-Verbose "Validating provided URL - $url"
+        if (-not $url) {
+            [uri]$url = Read-Host "Provide URL to check"
+            if ($url.Scheme -in @('https', 'http')) {
+                Write-Output "URL is correct: $url"
+            }
+        }
+        else {
+            Write-Error "Provided URL [$url] is invalid, please try again"
+            exit 1
+        }
+
         Write-Verbose "Establishing connection..."
         [string]$urlWithoutPrefixProtocol = $url -replace '^https://', '' -replace '/$', ''
-        $title = ((Get-Date -format yy-mm-dd-mm-ss) + "-" + $urlWithoutPrefixProtocol -replace '\.', "-")
+        [string]$title = ((Get-Date -format yy-mm-dd-mm-ss) + "-" + $urlWithoutPrefixProtocol -replace '\.', "-")
+        [string]$script:path = Join-Path $PWD "$title"
     }
 
     process {
@@ -60,36 +53,36 @@ function checkConnection {
                 Write-Verbose "Successfully finished Invoke-WebRequest"
                 
             }
-            if ($script:tncResult = Test-NetConnection $urlWithoutPrefixProtocol -TraceRoute -InformationLevel Detailed) {
-                Write-Verbose "Successfully finished Test-NetConnection"
-            }
+            #if ($script:tncResult = Test-NetConnection $urlWithoutPrefixProtocol -TraceRoute -InformationLevel Detailed) {
+            #    Write-Verbose "Successfully finished Test-NetConnection"
+            #}
 
             if ($script:webRequestResult = [System.Net.WebRequest]::Create($url)) {
                 $script:webRequestResult.AllowAutoRedirect = $false;
                 $script:statusCode = [int]$script:webRequestResult.getresponse().statuscode;
                 Write-Verbose "Successfully finished test request"
             }
-            if (Resolve-DnsName $urlWithoutPrefixProtocol) {
-                $script:dnsResolved = $true;
-                Write-Verbose "Successfully finished resolving DNS"
-            }
+            #if (Resolve-DnsName $urlWithoutPrefixProtocol) {
+            #    $script:dnsResolved = $true;
+            #    Write-Verbose "Successfully finished resolving DNS"
+            #}
             
             if ($script:statusCode -eq 200) {
 
-                Write-Host "Connection to $url succeeded!"
+                Write-Output "Connection to $url succeeded!"
 
             }
             elseif ($script:statusCode -ge 300 -and $script:statusCode -lt 400) {
                 $isRedirecting = $true;
-                Write-Host "Connecting to $url succeeded!"
-                Write-Host "Connecting to $url is redirecting to another address"
+                Write-Output "Connecting to $url succeeded!"
+                Write-Output "Connecting to $url is redirecting to another address"
             }
             elseif ($script:statusCode -ge 500) {
-                Write-Host "Connection cannot be established due to server performance: $_"
+                Write-Output "Connection cannot be established due to server performance: $_"
             }
             else {
 
-                Write-Host "Connection $url cannot be established: $_"
+                Write-Output "Connection $url cannot be established: $_"
 
             }
             
@@ -99,31 +92,31 @@ function checkConnection {
         }
 
         try {
-            #arp -a (szuka hostów w lokalnej sieci)
-            $script:destinationIp = $script:tncResult.RemoteAddress
-            $script:destinationHostname = ([System.Net.Dns]::GetHostEntry($script:destinationIp).HostName)
+            #arp -a (looking for hosts inside local network)
+            #$script:destinationIp = $script:tncResult.RemoteAddress
+            #$script:destinationHostname = ([System.Net.Dns]::GetHostEntry($script:destinationIp).HostName)
             $script:destinationServer = $script:webRequestResult.GetResponse().server
-            $script:clienIp = ($script:tncResult.SourceAddress).ToString()
+            #$script:clienIp = ($script:tncResult.SourceAddress).ToString()
             $script:clientHostname = hostname
             $script:statusCode = $script:statusCode
-            $script:traceRoute = ($script:tncResult | Select-Object -ExpandProperty traceroute)
-            $script:hopsCount = ($script:tncResult.TraceRoute | Measure-Object).Count
+            #$script:traceRoute = ($script:tncResult | Select-Object -ExpandProperty traceroute)
+            # $script:hopsCount = ($script:tncResult.TraceRoute | Measure-Object).Count
             $script:rawContentLength = $script:curlResult.RawContentLength
             
 
             $script:connectionInfo = @{
-                Destination_URL      = $url
-                Destination_IP       = $script:destinationIp
-                Destination_Hostname = $script:destinationHostname
-                Destination_Server   = $script:destinationServer
-                Client_IP            = $script:clienIp
-                Client_Hostname      = $script:clientHostname
-                Status_Code          = $script:statusCode
-                Trace_Route          = $script:traceRoute -replace " ", " -> "
-                Hops_Count           = $script:hopsCount
-                DNS_Name_Resolved    = $script:dnsResolved
-                Redirecting          = $script:isRedirecting
-                Raw_Content_Length   = $script:rawContentLength
+                Destination_URL    = $url
+                #Destination_IP       = $script:destinationIp
+                #Destination_Hostname = $script:destinationHostname
+                Destination_Server = $script:destinationServer
+                #Client_IP            = $script:clienIp
+                Client_Hostname    = $script:clientHostname
+                Status_Code        = $script:statusCode
+                #Trace_Route          = $script:traceRoute -replace " ", " -> "
+                #Hops_Count           = $script:hopsCount
+                #DNS_Name_Resolved    = $script:dnsResolved
+                Redirecting        = $script:isRedirecting
+                Raw_Content_Length = $script:rawContentLength
                 
             } 
 
@@ -131,7 +124,7 @@ function checkConnection {
 
         }
         catch {
-            Write-Error "Error: $_"
+            Write-Error "Error during collecting information: $_"
         }
     }
 
@@ -147,13 +140,12 @@ Connetion diagnostic details:
 $($script:connectionInfo | Out-String)
 
 -----------------------------------------------------
-"@ | Out-File -FilePath "C:\Users\Administrator\Desktop\NetworkDiagnostics\$title.txt" -Encoding UTF8
+"@ | Out-File -FilePath "$script:path.txt" -Encoding UTF8
+
+        $script:connectionInfo | Export-Csv -Path "$script:path.csv" -Encoding UTF8
 
         Write-Verbose "Finished diagnosting connection: $url"
         
         exit
     }
 }
-
-
-validURL

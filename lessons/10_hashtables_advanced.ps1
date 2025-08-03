@@ -11,7 +11,7 @@
 
 #Excercise 10.1
 
-#Description: Create a hashtable studentGrades where the key is the student’s name and the value is their grade. Calculate and display the average grade.
+#Description: Create a hashtable studentGrades where the key is the student's name and the value is their grade. Calculate and display the average grade.
 
 
 <# 
@@ -360,7 +360,7 @@ exit
 #Excercise 10.5
 
 #Description: In a hashtable machineData, the key is a machine ID and the value is the number of system errors.
-#Use a switch to classify machines into OK (0), Warning (1–5), or Critical (6+).
+#Use a switch to classify machines into OK (0), Warning (1-5), or Critical (6+).
 
 
 <# 
@@ -402,8 +402,8 @@ exit
 
 #Excercise 10.1
 
-#Description: Use a hashtable to store user logins (username → timestamp).
-#Use switch to classify logins as Early (6–9 AM), Regular (9–17), or Late (after 17).
+#Description: Use a hashtable to store user logins (username - timestamp).
+#Use switch to classify logins as Early (6-9 AM), Regular (9-17), or Late (after 17).
 
 
 
@@ -554,4 +554,3 @@ $userStats.GetEnumerator() | ForEach-Object {
  #>
 
 #!------------------------------------------------------------------------------------------------------!
-

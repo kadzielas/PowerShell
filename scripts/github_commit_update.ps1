@@ -19,10 +19,10 @@ function commitUpdateToRepo {
 
         Set-Location -Path $script:pathToRepo
 
-        Write-Host "GIT status below:"
-        Write-Host $script:spaceText
+        Write-Output "GIT status below:"
+        Write-Output $script:spaceText
         git status
-        Write-Host $script:spaceText
+        Write-Output $script:spaceText
 
         $script:commit = Read-Host "Provide description of commit that you want to push into repository"
     }

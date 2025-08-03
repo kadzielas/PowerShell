@@ -1,7 +1,7 @@
 function Get-EvenNumber {
     [CmdletBinding()]
     param (
-        # Accepts integers 1–100 from pipeline with help message
+        # Accepts integers 1-100 from pipeline with help message
         [Parameter(
             Mandatory = $true,
             ValueFromPipeline = $true,

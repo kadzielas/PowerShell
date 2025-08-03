@@ -1,0 +1,20 @@
+|----------------------------------------------------
+| Date: 2025-38-02 15:38
+| URL: https://google.com/
+| Status: MovedPermanently
+|----------------------------------------------------
+
+Connetion diagnostic details:
+
+Name                           Value
+----                           -----
+Status_Code                    301
+Client_Hostname                fedora
+Redirecting                    False
+Destination_Server             gws
+Raw_Content_Length             51337
+Destination_URL                https://google.com/
+
+
+
+-----------------------------------------------------
