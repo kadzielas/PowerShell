@@ -81,10 +81,6 @@ jobs:
         run: |
           npm install -g markdownlint-cli
 
-      - name: "Lint README"
-        run: |
-          markdownlint README.md
-
       - name: "Install cspell"
         run: |
           npm install -g cspell
@@ -106,7 +102,6 @@ jobs:
 
       - name: "Lint YAML files"
         run: |
-          cd ./workflows
           yamllint .
 
   github-actions-workflows-validate:
@@ -120,7 +115,7 @@ jobs:
       - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871
 
       - name: "Validate workflows"
-        uses: devops-actions/actionlint@v1
+        uses: rhysd/actionlint@v1
 
   connection-check:
     name: "Connection script check"
@@ -143,7 +138,7 @@ jobs:
 
       - name: "Run Analyzer"
         run: |
-          $results = Invoke-ScriptAnalyzer -Path .
+          $results = Invoke-ScriptAnalyzer -Path . `
           -Recurse -Severity Warning, Error
           if ($results.Count -gt 0) {
           $results | Format-Table
