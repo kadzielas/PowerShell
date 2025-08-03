@@ -142,9 +142,14 @@ jobs:
         shell: pwsh
 
       - name: "Run Analyzer"
-        run: >
-          $results = 
-          Invoke-ScriptAnalyzer -Path . -Recurse -Severity Warning, Error
+        run: |
+          $results = (
+          Invoke-ScriptAnalyzer `
+          -Path . `
+          -Recurse `
+          -Severity Warning, Error
+          )
+
           if ($results.Count -gt 0) {
           $results | Format-Table
           throw "::error::PSScriptAnalyzer found issue"
