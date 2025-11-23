@@ -20,10 +20,10 @@
 | ✅    | 8      | Arrays and Variables                        | Working with arrays, hash tables, variable types, and scopes.                                  |
 | ✅    | 9      | Advanced Conditional Logic & Data Filtering | Complex conditions, switch blocks, and nested logical filtering.                              |
 | ✅    | 10     | Hash tables Advanced                         | Creating, accessing, nesting, and using hash tables in depth.                                  |
-| ❌    | 11     | Error Handling                              | Try/catch/finally blocks and handling different types of errors.                              |
-| ❌    | 12     | Scripting Basics                            | Writing reusable scripts, using parameters, and basic logic.                                  |
-| ❌    | 13     | Modules and Importing                       | Creating and using reusable PowerShell modules.                                               |
-| ❌    | 14     | Working with Objects                        | Exploring and manipulating .NET objects in PowerShell.                                        |
-| ❌    | 15     | Remoting and Sessions                       | Establishing remote sessions and running remote commands.                                     |
-| ❌    | 16     | Working with APIs and Web                   | Using `Invoke-RestMethod`, `Invoke-WebRequest`, and consuming REST APIs.                      |
-| ❌    | 17     | Scheduled Tasks and Jobs                    | Creating background jobs and scheduling script execution.                                     |
+| ✅    | 11     | Error Handling                              | Try/catch/finally blocks and handling different types of errors.                              |
+| ✅    | 12     | Scripting Basics                            | Writing reusable scripts, using parameters, and basic logic.                                  |
+| ✅    | 13     | Modules and Importing                       | Creating and using reusable PowerShell modules.                                               |
+| ✅    | 14     | Working with Objects                        | Exploring and manipulating .NET objects in PowerShell.                                        |
+| ✅    | 15     | Remoting and Sessions                       | Establishing remote sessions and running remote commands.                                     |
+| ✅    | 16     | Working with APIs and Web                   | Using `Invoke-RestMethod`, `Invoke-WebRequest`, and consuming REST APIs.                      |
+| ✅    | 17     | Scheduled Tasks and Jobs                    | Creating background jobs and scheduling script execution.                                     |
